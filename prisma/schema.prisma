@@ -1,0 +1,115 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Enum para el tipo de tarea
+enum TaskType {
+  ONCE
+  RECURRENT
+}
+
+// Modelo Users
+model User {
+  clerkId    String @id
+  username   String @unique
+  experience Int    @default(0)
+  level      Int    @default(1)
+  createdAt  DateTime @default(now())
+  // Relaciones
+  projects         Project[]
+  tasks            Task[]
+  taskCompletions  TaskCompletion[]
+  userAchievements UserAchievement[]
+
+}
+
+// Modelo Categories
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+  
+  // Relaciones
+  tasks Task[]
+}
+
+// Modelo Projects
+model Project {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  title       String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  // Relaciones
+  user  User   @relation(fields: [userId], references: [clerkId])
+  tasks Task[]
+}
+
+// Modelo Tasks
+model Task {
+  id                  Int      @id @default(autoincrement())
+  userId              String
+  projectId           Int?
+  categoryId          Int?
+  title               String
+  description         String?
+  type                TaskType
+  difficulty          Int      @default(1)
+  experienceReward    Int      @default(10)
+  recurrencePattern   String?
+  recurrenceInterval  Int?
+  isDefault           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  
+  // Relaciones
+  user            User             @relation(fields: [userId], references: [clerkId])
+  project         Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category        Category?        @relation(fields: [categoryId], references: [id])
+  taskCompletions TaskCompletion[]
+}
+
+// Modelo TaskCompletions
+model TaskCompletion {
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  userId      String
+  completedAt DateTime @default(now())
+  
+  // Relaciones
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [clerkId])
+}
+
+// Modelo Achievements
+model Achievement {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String
+  iconUrl     String?
+  
+  // Relaciones
+  userAchievements UserAchievement[]
+}
+
+// Modelo UserAchievements (tabla intermedia)
+model UserAchievement {
+  userId        String
+  achievementId Int
+  achievedAt    DateTime @default(now())
+  isDisplayed   Boolean  @default(false)
+  
+  // Relaciones
+  user        User        @relation(fields: [userId], references: [clerkId])
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+  
+  // Clave primaria compuesta
+  @@id([userId, achievementId])
+}
