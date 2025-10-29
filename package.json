@@ -1,0 +1,39 @@
+{
+	"name": "nextlevel",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+		"migration:create": "wrangler d1 migrations create nextlevel-db",  
+		"migration:generate-local": "prisma migrate diff --from-schema-datamodel ./prisma/schema.prisma --to-schema-datamodel ./prisma/schema.prisma --script --output",  
+		"migration:apply-local": "wrangler d1 migrations apply  nextlevel-db --local"
+	},
+	"dependencies": {
+		"@opennextjs/cloudflare": "^1.3.0",
+		"@prisma/adapter-d1": "^6.18.0",
+		"@prisma/client": "^6.18.0",
+		"dotenv": "^17.2.3",
+		"next": "15.4.6",
+		"react": "19.1.0",
+		"react-dom": "19.1.0"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3",
+		"@tailwindcss/postcss": "^4",
+		"@types/node": "^20.19.24",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"eslint": "^9",
+		"eslint-config-next": "15.4.6",
+		"prisma": "^6.18.0",
+		"tailwindcss": "^4",
+		"typescript": "^5",
+		"wrangler": "^4.45.2"
+	}
+}
