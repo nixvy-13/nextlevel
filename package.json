@@ -11,7 +11,7 @@
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
 		"migration:create": "wrangler d1 migrations create nextlevel-db",  
-		"migration:generate-local": "prisma migrate diff --from-schema-datamodel ./prisma/schema.prisma --to-schema-datamodel ./prisma/schema.prisma --script --output",  
+		"migration:generate-local": "prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.prisma --script --output",  
 		"migration:apply-local": "wrangler d1 migrations apply  nextlevel-db --local"
 	},
 	"dependencies": {
