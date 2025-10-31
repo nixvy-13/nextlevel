@@ -8,7 +8,7 @@ import { ChevronDown } from "lucide-react";
 export default function Home() {
   return (
     <div className="min-h-screen bg-black pt-16 p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-white">Mis misiones</h1>
           <div className="flex items-center gap-3">
@@ -41,7 +41,7 @@ export default function Home() {
             </TabsTrigger>
             <TabsTrigger 
               value="kanban" 
-              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-gray-800 data-[state=active]:border-gray-600 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 transition-all font-semibold"
+              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:border-purple-400 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 transition-all font-semibold"
             >
               Kanban board
             </TabsTrigger>
@@ -104,8 +104,36 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="kanban" className="mt-8">
-            <div className="text-center py-16 bg-gray-900 border-2 border-gray-700 rounded-sm">
-              <p className="text-lg text-gray-400 font-semibold">Vista de Kanban Board - Próximamente</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Columna: Por hacer */}
+              <div className="flex flex-col min-h-[700px]">
+                <div className="bg-red-900/30 border-2 border-red-800/50 rounded-sm p-6 flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
+                    Por hacer
+                  </h3>
+                  {/* Espacio para tarjetas de misión */}
+                </div>
+              </div>
+
+              {/* Columna: En progreso */}
+              <div className="flex flex-col min-h-[700px]">
+                <div className="bg-yellow-900/30 border-2 border-yellow-700/50 rounded-sm p-6 flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
+                    En progreso
+                  </h3>
+                  {/* Espacio para tarjetas de misión */}
+                </div>
+              </div>
+
+              {/* Columna: Hechas */}
+              <div className="flex flex-col min-h-[700px]">
+                <div className="bg-green-900/30 border-2 border-green-800/50 rounded-sm p-6 flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
+                    Hechas
+                  </h3>
+                  {/* Espacio para tarjetas de misión */}
+                </div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>

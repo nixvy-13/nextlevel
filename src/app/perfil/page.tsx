@@ -7,7 +7,7 @@ import { User, Upload } from "lucide-react";
 export default function PerfilPage() {
   return (
     <div className="min-h-screen bg-black pt-16 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         {/* Header - Título centrado, foto/XP a la derecha */}
         <div className="relative flex items-center justify-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-white">Mi perfil</h1>
