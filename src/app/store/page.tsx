@@ -1,8 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, User } from "lucide-react";
+import { MissionCard } from "@/components/mission-card";
+import { User } from "lucide-react";
 
 export default function StorePage() {
   // Categorías de misiones
@@ -42,28 +42,13 @@ export default function StorePage() {
 
         {/* Tarjeta de Misión Disponible */}
         <div className="space-y-4 mb-8">
-          <Card className="bg-purple-600/80 border-2 border-purple-500 shadow-xl shadow-purple-500/20 rounded-sm overflow-hidden hover:border-purple-400 transition-all">
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-white text-lg font-bold mb-2">Tipo - Título - Xp</CardTitle>
-                  <CardDescription className="text-white/80">
-                    Descripción de la misión
-                  </CardDescription>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Button 
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white border-2 border-yellow-500 hover:border-yellow-400 rounded-sm px-6 py-2 font-bold shadow-lg shadow-yellow-500/50 transition-all"
-                  >
-                    Añadir
-                  </Button>
-                  <button className="text-white hover:text-purple-200 transition-colors">
-                    <ChevronDown className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
+          <MissionCard 
+            type="Tipo"
+            title="Título"
+            xp={0}
+            description="Descripción de la misión"
+            variant="store"
+          />
         </div>
       </div>
     </div>
