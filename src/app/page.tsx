@@ -1,9 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronDown } from "lucide-react";
+import { MissionCard } from "@/components/mission-card";
 
 export default function Home() {
   return (
@@ -49,43 +48,12 @@ export default function Home() {
 
           <TabsContent value="lista" className="space-y-4">
             {/* Tarjeta de misión ejemplo */}
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-950 border-2 border-purple-500/50 shadow-xl shadow-purple-500/20 rounded-sm overflow-hidden hover:border-purple-400 transition-all">
-              <CardHeader className="pb-3 border-b border-purple-500/30">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-purple-400 text-lg font-bold">Tipo - Título - Xp</CardTitle>
-                    <CardDescription className="text-gray-400 mt-2">
-                      Descripción de la misión
-                    </CardDescription>
-                  </div>
-                  <button className="text-purple-400 hover:text-purple-300 transition-colors">
-                    <ChevronDown className="w-6 h-6" />
-                  </button>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="flex gap-3 flex-wrap">
-                  <Button 
-                    size="sm" 
-                    className="bg-green-600 hover:bg-green-700 text-white border-2 border-green-500 hover:border-green-400 rounded-sm px-5 py-2 font-semibold transition-all shadow-md shadow-green-500/30"
-                  >
-                    Completar
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-500 hover:border-blue-400 rounded-sm px-5 py-2 font-semibold transition-all shadow-md shadow-blue-500/30"
-                  >
-                    Editar
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    className="bg-red-600 hover:bg-red-700 text-white border-2 border-red-500 hover:border-red-400 rounded-sm px-5 py-2 font-semibold transition-all shadow-md shadow-red-500/30"
-                  >
-                    Borrar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <MissionCard 
+              type="Tipo"
+              title="Título"
+              xp={0}
+              description="Descripción de la misión"
+            />
 
             {/* Botón para crear misión */}
             <div className="flex justify-center pt-6">
