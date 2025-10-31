@@ -21,13 +21,13 @@ const items = [
     icon: Home,
   },
   {
-    title: "Mis misiones",
-    url: "/misiones",
+    title: "Store de misiones",
+    url: "/store",
     icon: BookOpen,
   },
   {
     title: "Mis misiones",
-    url: "/misiones",
+    url: "/",
     icon: BookOpen,
   },
   {
