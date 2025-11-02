@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MissionCard } from "@/components/mission-card";
+import { MissionsCalendar } from "@/components/missions-calendar";
 
 export default function Home() {
   return (
@@ -13,12 +14,12 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Button 
               className="bg-transparent border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10 hover:text-purple-300 rounded-sm px-6 py-2 font-semibold transition-all"
-            >
+          >
               Iniciar Sesión
             </Button>
             <Button 
               className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-6 py-2 font-semibold transition-all shadow-lg shadow-purple-500/50"
-            >
+          >
               Registrarse
             </Button>
           </div>
@@ -41,7 +42,7 @@ export default function Home() {
             <TabsTrigger 
               value="kanban" 
               className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:border-purple-400 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 transition-all font-semibold"
-            >
+        >
               Kanban board
             </TabsTrigger>
           </TabsList>
@@ -66,9 +67,7 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="calendario" className="mt-8">
-            <div className="text-center py-16 bg-gray-900 border-2 border-gray-700 rounded-sm">
-              <p className="text-lg text-gray-400 font-semibold">Vista de Calendario - Próximamente</p>
-            </div>
+            <MissionsCalendar />
           </TabsContent>
 
           <TabsContent value="kanban" className="mt-8">

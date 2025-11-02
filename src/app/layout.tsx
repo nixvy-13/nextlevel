@@ -35,7 +35,7 @@ export default function RootLayout({
             <div className="absolute top-4 left-4 z-50">
               <SidebarTrigger className="bg-gray-900 hover:bg-gray-800 border-2 border-purple-500 hover:border-purple-400 text-purple-400 hover:text-purple-300 p-3 rounded-sm shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all" />
             </div>
-            {children}
+        {children}
           </main>
         </SidebarProvider>
       </body>
