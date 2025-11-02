@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { User, Upload } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 export default function PerfilPage() {
+  const { user } = useUser();
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -16,7 +16,7 @@ export default function PerfilPage() {
               Nombre
             </h2>
             <p className="text-white text-lg font-medium mb-6">
-              Tu nombre
+              {user?.username}
             </p>
 
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
@@ -29,14 +29,22 @@ export default function PerfilPage() {
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
               Foto de Perfil
             </h2>
-            <div className="relative flex-1 bg-gray-900 border-2 border-gray-700 rounded-sm overflow-hidden group hover:border-purple-500 transition-all min-h-[300px]">
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/80 group-hover:bg-gray-950/60 transition-all">
-                <User className="w-20 h-20 text-gray-600 mb-4" />
-                <Button className="bg-purple-600 hover:bg-purple-700 border-2 border-purple-500 text-white rounded-sm px-6 py-2 font-semibold shadow-lg shadow-purple-500/50">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Subir Imagen
-                </Button>
-              </div>
+            <div className="relative w-full aspect-square bg-gray-900 border-2 border-gray-700 rounded-sm overflow-hidden group hover:border-purple-500 transition-all">
+              {user?.imageUrl ? (
+                <img 
+                  src={user.imageUrl} 
+                  alt={`Foto de perfil de ${user.username || 'Usuario'}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/80">
+                  <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center">
+                    <span className="text-gray-400 text-4xl font-bold">
+                      {user?.username?.charAt(0).toUpperCase() || '?'}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
