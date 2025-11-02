@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { AppHeader } from "@/components/app-header";
+import { ClerkProvider } from '@clerk/nextjs'
+import { ChevronRight } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,20 +28,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
-      >
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full relative">
-            <div className="absolute top-4 left-4 z-50">
-              <SidebarTrigger className="bg-gray-900 hover:bg-gray-800 border-2 border-purple-500 hover:border-purple-400 text-purple-400 hover:text-purple-300 p-3 rounded-sm shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all" />
-            </div>
-        {children}
-          </main>
-        </SidebarProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="es">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
+        >
+          <SidebarProvider>
+            <AppSidebar />
+            <main className="w-full flex flex-col">
+              <div className="sticky top-0 z-40 w-full bg-black border-b-2 border-purple-500/30">
+                <div className="flex items-center h-[72px]">
+                  <div className="flex-shrink-0 px-4">
+                    <SidebarTrigger className="bg-gray-900 hover:bg-gray-800 border-2 border-purple-500 hover:border-purple-400 text-purple-400 hover:text-purple-300 p-2 rounded-sm shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all">
+                      <ChevronRight className="w-5 h-5" />
+                    </SidebarTrigger>
+                  </div>
+                  <div className="flex-1">
+                    <AppHeader />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1">
+                {children}
+              </div>
+            </main>
+          </SidebarProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

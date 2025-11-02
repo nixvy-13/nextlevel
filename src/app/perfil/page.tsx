@@ -6,19 +6,8 @@ import { User, Upload } from "lucide-react";
 
 export default function PerfilPage() {
   return (
-    <div className="min-h-screen bg-black pt-16 p-4 md:p-8">
+    <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
-        {/* Header - Título centrado, foto/XP a la derecha */}
-        <div className="relative flex items-center justify-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Mi perfil</h1>
-          <div className="absolute right-0 flex items-center gap-3">
-            <span className="text-purple-400 font-semibold">100 Xp</span>
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-sm flex items-center justify-center border-2 border-purple-400 shadow-lg shadow-purple-500/50">
-              <User className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
         {/* Sección Superior - Info (1/4) y Gráfica (3/4) */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
           {/* CUADRANTE SUPERIOR IZQUIERDO - Info Personal y Avatar (1/4) */}

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { MissionCard } from "@/components/mission-card";
-import { User } from "lucide-react";
 
 export default function StorePage() {
   // Categorías de misiones
@@ -15,19 +14,8 @@ export default function StorePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black pt-16 p-4 md:p-8">
+    <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Misiones disponibles</h1>
-          <div className="flex items-center gap-3">
-            <span className="text-purple-400 font-semibold">100 Xp</span>
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-sm flex items-center justify-center border-2 border-purple-400 shadow-lg shadow-purple-500/50">
-              <User className="w-6 h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
         {/* Filtros de Categorías */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center md:justify-start">
           {categories.map((category) => (

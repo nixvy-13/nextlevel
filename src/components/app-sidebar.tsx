@@ -40,9 +40,6 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar className="bg-gray-950 border-r-2 border-purple-500/30">
-      <SidebarHeader className="bg-gray-950 p-6 border-b-2 border-purple-500/30">
-        <h2 className="text-purple-400 text-xl font-bold px-2 tracking-wide">BARRA LATERAL</h2>
-      </SidebarHeader>
       <SidebarContent className="bg-gray-950">
         <SidebarGroup>
           <SidebarGroupContent>
