@@ -55,60 +55,23 @@ export async function POST(req: Request) {
 
   try {
     if (eventType === 'user.created') {
-      const { id, username, email_addresses } = evt.data;
-      
-      // Extrae el username con prioridad: username > email > id con prefijo
-      const finalUsername = 
-        username || 
-        email_addresses?.[0]?.email_address?.split('@')[0] || 
-        `user_${id}`;
-      
       // Guarda el usuario en la base de datos
-      await db.user.create({
-        data: {
-          clerkId: id,
-          username: finalUsername,
-          experience: 0,
-          level: 1,
-        },
+      const { id } = evt.data;
+      
+      // Verifica si el usuario ya existe
+      const existingUser = await db.user.findUnique({
+        where: { clerkId: id }
       });
       
-      console.log(`✅ Usuario creado en la BD: ${id} (${finalUsername})`);
-    }
-
-    if (eventType === 'user.updated') {
-      const { id, username, email_addresses } = evt.data;
-      
-      const finalUsername = 
-        username || 
-        email_addresses?.[0]?.email_address?.split('@')[0] || 
-        `user_${id}`;
-      
-      try {
-        // Actualiza el usuario en la base de datos
-        await db.user.update({
-          where: { clerkId: id },
+      if (existingUser) {
+        console.log(`⚠️ Usuario ya existe en BD: ${id}`);
+      } else {
+        await db.user.create({
           data: {
-            username: finalUsername,
+            clerkId: id
           },
         });
-        
-        console.log(`✅ Usuario actualizado en la BD: ${id} (${finalUsername})`);
-      } catch (error: any) {
-        // Si el usuario no existe, créalo (puede pasar si el webhook de creación falló antes)
-        if (error?.code === 'P2025') { // Prisma error: Record not found
-          console.warn(`⚠️ Usuario no encontrado, creando: ${id}`);
-          await db.user.create({
-            data: {
-              clerkId: id,
-              username: finalUsername,
-              experience: 0,
-              level: 1,
-            },
-          });
-        } else {
-          throw error; // Re-lanza otros errores
-        }
+        console.log(`✅ Usuario creado en BD: ${id}`);
       }
     }
 
@@ -116,8 +79,6 @@ export async function POST(req: Request) {
       const { id } = evt.data;
       
       try {
-        // Elimina el usuario de la base de datos
-        // Las relaciones en cascada eliminarán automáticamente sus datos relacionados
         await db.user.delete({
           where: { clerkId: id },
         });
@@ -127,9 +88,8 @@ export async function POST(req: Request) {
         // Si el usuario ya no existe, no es un error crítico
         if (error?.code === 'P2025') { // Prisma error: Record not found
           console.warn(`⚠️ Usuario ya no existe en BD: ${id}`);
-          // No lanzamos error, devolvemos 200 porque el resultado final es el mismo
         } else {
-          throw error; // Re-lanza otros errores
+          throw error;
         }
       }
     }

@@ -17,7 +17,6 @@ enum TaskType {
 // Modelo Users
 model User {
   clerkId    String @id
-  username   String @unique
   experience Int    @default(0)
   level      Int    @default(1)
   createdAt  DateTime @default(now())
@@ -44,7 +43,6 @@ model Project {
   id          Int      @id @default(autoincrement())
   userId      String
   title       String
-  prueba String
   description String?
   isPublic    Boolean  @default(false)
   createdAt   DateTime @default(now())
