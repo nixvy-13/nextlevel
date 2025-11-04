@@ -57,16 +57,19 @@ export async function POST(req: Request) {
     if (eventType === 'user.created') {
       const { id, username, email_addresses } = evt.data;
       
-      // Extrae el username con prioridad: username > email > id
+      // Extrae el username con prioridad: username > email > id con prefijo
       const finalUsername = 
         username || 
-        email_addresses[0]?.email_address?.split('@')[0];
+        email_addresses?.[0]?.email_address?.split('@')[0] || 
+        `user_${id}`;
       
       // Guarda el usuario en la base de datos
       await db.user.create({
         data: {
           clerkId: id,
           username: finalUsername,
+          experience: 0,
+          level: 1,
         },
       });
       
@@ -78,36 +81,72 @@ export async function POST(req: Request) {
       
       const finalUsername = 
         username || 
-        email_addresses[0]?.email_address?.split('@')[0];
+        email_addresses?.[0]?.email_address?.split('@')[0] || 
+        `user_${id}`;
       
-      // Actualiza el usuario en la base de datos
-      await db.user.update({
-        where: { clerkId: id },
-        data: {
-          username: finalUsername,
-        },
-      });
-      
-      console.log(`✅ Usuario actualizado en la BD: ${id} (${finalUsername})`);
+      try {
+        // Actualiza el usuario en la base de datos
+        await db.user.update({
+          where: { clerkId: id },
+          data: {
+            username: finalUsername,
+          },
+        });
+        
+        console.log(`✅ Usuario actualizado en la BD: ${id} (${finalUsername})`);
+      } catch (error: any) {
+        // Si el usuario no existe, créalo (puede pasar si el webhook de creación falló antes)
+        if (error?.code === 'P2025') { // Prisma error: Record not found
+          console.warn(`⚠️ Usuario no encontrado, creando: ${id}`);
+          await db.user.create({
+            data: {
+              clerkId: id,
+              username: finalUsername,
+              experience: 0,
+              level: 1,
+            },
+          });
+        } else {
+          throw error; // Re-lanza otros errores
+        }
+      }
     }
 
     if (eventType === 'user.deleted') {
       const { id } = evt.data;
       
-      // Elimina el usuario de la base de datos
-      // Las relaciones en cascada eliminarán automáticamente
-      await db.user.delete({
-        where: { clerkId: id },
-      });
-      
-      console.log(`✅ Usuario eliminado de la BD: ${id}`);
+      try {
+        // Elimina el usuario de la base de datos
+        // Las relaciones en cascada eliminarán automáticamente sus datos relacionados
+        await db.user.delete({
+          where: { clerkId: id },
+        });
+        
+        console.log(`✅ Usuario eliminado de la BD: ${id}`);
+      } catch (error: any) {
+        // Si el usuario ya no existe, no es un error crítico
+        if (error?.code === 'P2025') { // Prisma error: Record not found
+          console.warn(`⚠️ Usuario ya no existe en BD: ${id}`);
+          // No lanzamos error, devolvemos 200 porque el resultado final es el mismo
+        } else {
+          throw error; // Re-lanza otros errores
+        }
+      }
     }
 
-    return new Response('Webhook procesado correctamente', { status: 200 });
+    // Clerk espera un código 2xx para considerar el webhook como exitoso
+    return new Response(JSON.stringify({ received: true }), { 
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error) {
     console.error('❌ Error procesando webhook:', error);
-    return new Response('Error: No se pudo procesar el webhook', {
+    // Devolvemos 500 para que Clerk reintente el webhook
+    return new Response(JSON.stringify({ 
+      error: 'Error interno del servidor' 
+    }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 }
