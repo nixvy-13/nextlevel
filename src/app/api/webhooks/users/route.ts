@@ -87,7 +87,7 @@ export async function POST(req: Request) {
       } catch (error: any) {
         // Si el usuario ya no existe, no es un error crítico
         if (error?.code === 'P2025') { // Prisma error: Record not found
-          console.warn(`⚠️ Usuario ya no existe en BD: ${id}`);
+          console.warn(`⚠️ El usuario no existe en la BD: ${id}`);
         } else {
           throw error;
         }

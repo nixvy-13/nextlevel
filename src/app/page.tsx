@@ -1,11 +1,15 @@
 "use client"
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MissionCard } from "@/components/mission-card";
 import { MissionsCalendar } from "@/components/missions-calendar";
+import { CreateMissionModal } from "@/components/create-mission-modal";
 
 export default function Home() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -43,6 +47,7 @@ export default function Home() {
             {/* Botón para crear misión */}
             <div className="flex justify-center pt-6">
               <Button 
+                onClick={() => setIsCreateModalOpen(true)}
                 className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-12 py-6 text-lg font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-400/60 transition-all"
               >
                 Crear Misión
@@ -88,6 +93,11 @@ export default function Home() {
             </div>
           </TabsContent>
         </Tabs>
+        {/* Modal de creación de misión */}
+        <CreateMissionModal
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        />
       </div>
     </div>
   );
