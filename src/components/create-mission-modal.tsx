@@ -17,15 +17,13 @@ interface CreateMissionModalProps {
 export function CreateMissionModal({ open, onOpenChange }: CreateMissionModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-200 border-2 border-gray-400 rounded-sm max-w-md p-0 gap-0">
+      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md p-0 gap-0 shadow-2xl shadow-purple-500/50">
         {/* Header con botón cerrar */}
-        <DialogHeader className="relative p-6 pb-4">
+        <DialogHeader className="relative p-6 pb-4 border-b border-purple-500/30">
           <button
             onClick={() => onOpenChange(false)}
-            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
+            className="absolute right-4 top-4 rounded-sm opacity-70 transition-all hover:opacity-100 hover:bg-purple-500/20 focus:outline-none disabled:pointer-events-none p-1"
           >
-            <X className="h-6 w-6 text-black" />
-            <span className="sr-only">Cerrar</span>
           </button>
         </DialogHeader>
 
@@ -33,57 +31,57 @@ export function CreateMissionModal({ open, onOpenChange }: CreateMissionModalPro
         <div className="px-6 pb-6 space-y-4">
           {/* Nombre de la misión */}
           <div>
-            <label className="block text-black font-semibold mb-2 text-sm">
-              Nombre de la mision
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
+              Nombre de la misión
             </label>
             <Input 
-              placeholder="Input"
-              className="bg-white border-2 border-gray-300 text-black rounded-sm h-10 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Ingresa el nombre..."
+              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
           {/* Tipo de misión */}
           <div>
-            <label className="block text-black font-semibold mb-2 text-sm">
-              Tipo de mision
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
+              Tipo de misión
             </label>
             <Input 
-              placeholder="Input"
-              className="bg-white border-2 border-gray-300 text-black rounded-sm h-10 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Ej: Estudio, Ejercicio..."
+              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
           {/* Objetivo de la misión */}
           <div>
-            <label className="block text-black font-semibold mb-2 text-sm">
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
               Objetivo de la misión
             </label>
             <Input 
-              placeholder="Input"
-              className="bg-white border-2 border-gray-300 text-black rounded-sm h-10 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Describe el objetivo..."
+              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
           {/* Recurrencia */}
           <div>
-            <label className="block text-black font-semibold mb-2 text-sm">
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
               Recurrencia
             </label>
             <Input 
-              placeholder="Input"
-              className="bg-white border-2 border-gray-300 text-black rounded-sm h-10 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+              placeholder="Ej: Diaria, Semanal..."
+              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
           {/* Xp */}
           <div>
-            <label className="block text-black font-semibold mb-2 text-sm">
-              Xp
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
+              Puntos XP
             </label>
             <Input 
-              placeholder="Input"
+              placeholder="100"
               type="number"
-              className="bg-white border-2 border-gray-300 text-black rounded-sm h-10 focus:border-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
@@ -91,7 +89,7 @@ export function CreateMissionModal({ open, onOpenChange }: CreateMissionModalPro
           <div className="pt-4">
             <Button 
               type="submit"
-              className="w-full bg-gray-800 hover:bg-gray-900 text-white rounded-sm py-3 font-semibold text-base shadow-lg transition-all"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm py-3 font-bold text-base shadow-2xl shadow-purple-500/50 hover:shadow-purple-400/60 transition-all uppercase tracking-wide"
             >
               Crear misión
             </Button>
