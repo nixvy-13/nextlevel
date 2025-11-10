@@ -8,7 +8,17 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@clerk/nextjs";
+
+type TaskType = 'ONCE' | 'RECURRENT';
+type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
 
 interface CreateMissionModalProps {
   open: boolean;
@@ -18,20 +28,25 @@ interface CreateMissionModalProps {
 
 interface MissionData {
   userId: string;
-  nombre: string;
-  tipo: string;
-  objetivo: string;
-  recurrencia: string;
-  xp: number;
+  title: string;
+  description: string;
+  type: TaskType;
+  category: TaskCategory;
+  difficulty: number;
+  experienceReward: number;
+  recurrencePattern?: string;
+  recurrenceInterval?: number;
+  isDefault: boolean;
 }
 
 export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: CreateMissionModalProps) {
   const userId = useUser().user?.id;
-  const [nombre, setNombre] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [objetivo, setObjetivo] = useState("");
-  const [recurrencia, setRecurrencia] = useState("");
-  const [xp, setXp] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState<TaskCategory>("VARIADAS");
+  const [type, setType] = useState<TaskType>("ONCE");
+  const [difficulty, setDifficulty] = useState("1");
+  const [experienceReward, setExperienceReward] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -43,11 +58,13 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
     try {
       const missionData: MissionData = {
         userId: userId || "",
-        nombre,
-        tipo,
-        objetivo,
-        recurrencia,
-        xp: parseInt(xp) || 0,
+        title,
+        description,
+        type,
+        category,
+        difficulty: parseInt(difficulty) || 1,
+        experienceReward: parseInt(experienceReward) || 10,
+        isDefault: false,
       };
 
       const response = await fetch("/api/tasks/create", {
@@ -63,11 +80,12 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
       }
 
       // Limpiar el formulario
-      setNombre("");
-      setTipo("");
-      setObjetivo("");
-      setRecurrencia("");
-      setXp("");
+      setTitle("");
+      setDescription("");
+      setCategory("VARIADAS");
+      setType("ONCE");
+      setDifficulty("1");
+      setExperienceReward("");
 
       // Cerrar el modal y notificar al componente padre
       onOpenChange(false);
@@ -109,60 +127,83 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
             </label>
             <Input 
               placeholder="Ingresa el nombre..."
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
               disabled={isLoading}
               className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
-          {/* Tipo de misión */}
+          {/* Categoría */}
           <div>
             <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
-              Tipo de misión
+              Categoría
             </label>
-            <Input 
-              placeholder="Ej: Estudio, Ejercicio..."
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              required
-              disabled={isLoading}
-              className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
-            />
+            <Select value={category} onValueChange={(value: string) => setCategory(value as TaskCategory)} disabled={isLoading}>
+              <SelectTrigger className="bg-gray-900 border-2 border-purple-500/50 text-white rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus:ring-0 focus:ring-offset-0">
+                <SelectValue placeholder="Selecciona una categoría" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-900 border-2 border-purple-500/50 text-white">
+                <SelectItem value="SALUD" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Salud</SelectItem>
+                <SelectItem value="ENTRETENIMIENTO" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Entretenimiento</SelectItem>
+                <SelectItem value="SOCIALES" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Sociales</SelectItem>
+                <SelectItem value="NATURALEZA" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Naturaleza</SelectItem>
+                <SelectItem value="VARIADAS" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Variadas</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Objetivo de la misión */}
+          {/* Descripción */}
           <div>
             <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
-              Objetivo de la misión
+              Descripción
             </label>
             <Input 
-              placeholder="Describe el objetivo..."
-              value={objetivo}
-              onChange={(e) => setObjetivo(e.target.value)}
+              placeholder="Describe la misión..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required
               disabled={isLoading}
               className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
-          {/* Recurrencia */}
+          {/* Tipo de tarea */}
           <div>
             <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
-              Recurrencia
+              Tipo de tarea
+            </label>
+            <Select value={type} onValueChange={(value: string) => setType(value as TaskType)} disabled={isLoading}>
+              <SelectTrigger className="bg-gray-900 border-2 border-purple-500/50 text-white rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus:ring-0 focus:ring-offset-0">
+                <SelectValue placeholder="Selecciona el tipo" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-900 border-2 border-purple-500/50 text-white">
+                <SelectItem value="ONCE" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Una vez</SelectItem>
+                <SelectItem value="RECURRENT" className="focus:bg-purple-600/20 focus:text-white cursor-pointer">Recurrente</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Dificultad */}
+          <div>
+            <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
+              Dificultad (1-5)
             </label>
             <Input 
-              placeholder="Ej: Diaria, Semanal..."
-              value={recurrencia}
-              onChange={(e) => setRecurrencia(e.target.value)}
+              placeholder="1"
+              type="number"
+              min="1"
+              max="5"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
               required
               disabled={isLoading}
               className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
             />
           </div>
 
-          {/* Xp */}
+          {/* Puntos XP */}
           <div>
             <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
               Puntos XP
@@ -170,8 +211,8 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
             <Input 
               placeholder="100"
               type="number"
-              value={xp}
-              onChange={(e) => setXp(e.target.value)}
+              value={experienceReward}
+              onChange={(e) => setExperienceReward(e.target.value)}
               required
               disabled={isLoading}
               className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
