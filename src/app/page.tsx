@@ -8,12 +8,7 @@ import { MissionsCalendar } from "@/components/missions-calendar";
 import { CreateMissionModal } from "@/components/create-mission-modal";
 
 type TaskType = 'ONCE' | 'RECURRENT';
-
-interface Category {
-  id: number;
-  name: string;
-  description: string | null;
-}
+type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
 
 interface Project {
   id: number;
@@ -28,7 +23,7 @@ interface Task {
   id: number;
   userId: string;
   projectId: number | null;
-  categoryId: number | null;
+  category: TaskCategory | null;
   title: string;
   description: string | null;
   type: TaskType;
@@ -38,7 +33,6 @@ interface Task {
   recurrenceInterval: number | null;
   isDefault: boolean;
   createdAt: string;
-  category?: Category;
   project?: Project;
 }
 
@@ -46,7 +40,6 @@ interface MockDataResponse {
   success: boolean;
   data: {
     tasks: Task[];
-    categories: Category[];
     projects: Project[];
     user: {
       clerkId: string;
@@ -118,7 +111,7 @@ export default function Home() {
               tasks.map((task) => (
                 <MissionCard 
                   key={task.id}
-                  type={task.category?.name || task.type}
+                  type={task.category || task.type}
                   title={task.title}
                   xp={task.experienceReward}
                   description={task.description || 'Sin descripción'}
@@ -161,7 +154,7 @@ export default function Home() {
                       {tasks.slice(0, Math.ceil(tasks.length / 3)).map((task) => (
                         <MissionCard 
                           key={task.id}
-                          type={task.category?.name || task.type}
+                          type={task.category || task.type}
                           title={task.title}
                           xp={task.experienceReward}
                           description={task.description || 'Sin descripción'}
@@ -182,7 +175,7 @@ export default function Home() {
                       {tasks.slice(Math.ceil(tasks.length / 3), Math.ceil(tasks.length * 2 / 3)).map((task) => (
                         <MissionCard 
                           key={task.id}
-                          type={task.category?.name || task.type}
+                          type={task.category || task.type}
                           title={task.title}
                           xp={task.experienceReward}
                           description={task.description || 'Sin descripción'}
@@ -203,7 +196,7 @@ export default function Home() {
                       {tasks.slice(Math.ceil(tasks.length * 2 / 3)).map((task) => (
                         <MissionCard 
                           key={task.id}
-                          type={task.category?.name || task.type}
+                          type={task.category || task.type}
                           title={task.title}
                           xp={task.experienceReward}
                           description={task.description || 'Sin descripción'}

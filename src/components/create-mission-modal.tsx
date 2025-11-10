@@ -8,6 +8,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@clerk/nextjs";
 
 interface CreateMissionModalProps {
   open: boolean;
@@ -16,6 +17,7 @@ interface CreateMissionModalProps {
 }
 
 interface MissionData {
+  userId: string;
   nombre: string;
   tipo: string;
   objetivo: string;
@@ -24,6 +26,7 @@ interface MissionData {
 }
 
 export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: CreateMissionModalProps) {
+  const userId = useUser().user?.id;
   const [nombre, setNombre] = useState("");
   const [tipo, setTipo] = useState("");
   const [objetivo, setObjetivo] = useState("");
@@ -39,6 +42,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
 
     try {
       const missionData: MissionData = {
+        userId: userId || "",
         nombre,
         tipo,
         objetivo,

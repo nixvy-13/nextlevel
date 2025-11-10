@@ -3,12 +3,7 @@ import { faker } from '@faker-js/faker/locale/es';
 
 // Tipos basados en el schema de Prisma
 type TaskType = 'ONCE' | 'RECURRENT';
-
-interface Category {
-  id: number;
-  name: string;
-  description: string | null;
-}
+type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
 
 interface Project {
   id: number;
@@ -23,7 +18,7 @@ interface Task {
   id: number;
   userId: string;
   projectId: number | null;
-  categoryId: number | null;
+  category: TaskCategory | null;
   title: string;
   description: string | null;
   type: TaskType;
@@ -33,29 +28,8 @@ interface Task {
   recurrenceInterval: number | null;
   isDefault: boolean;
   createdAt: string;
-  category?: Category;
   project?: Project;
 }
-
-// Generar categorías mock
-const generateCategories = (): Category[] => {
-  const categoryNames = [
-    'Desarrollo Personal',
-    'Fitness y Salud',
-    'Aprendizaje',
-    'Trabajo',
-    'Hogar',
-    'Social',
-    'Creatividad',
-    'Finanzas'
-  ];
-
-  return categoryNames.map((name, index) => ({
-    id: index + 1,
-    name,
-    description: faker.lorem.sentence()
-  }));
-};
 
 // Generar proyectos mock
 const generateProjects = (userId: string): Project[] => {
@@ -73,12 +47,13 @@ const generateProjects = (userId: string): Project[] => {
 const generateTasks = (
   count: number,
   userId: string,
-  categories: Category[],
   projects: Project[]
 ): Task[] => {
+  const categories: TaskCategory[] = ['SALUD', 'ENTRETENIMIENTO', 'SOCIALES', 'NATURALEZA', 'VARIADAS'];
+  
   return Array.from({ length: count }, (_, index) => {
     const taskType: TaskType = faker.helpers.arrayElement(['ONCE', 'RECURRENT']);
-    const category = faker.helpers.arrayElement([...categories, null]);
+    const category = faker.helpers.arrayElement<TaskCategory | null>([...categories, null]);
     const project = faker.helpers.arrayElement([...projects, null, null]); // Más probabilidad de null
     const difficulty = faker.number.int({ min: 1, max: 5 });
     
@@ -86,7 +61,7 @@ const generateTasks = (
       id: index + 1,
       userId,
       projectId: project?.id ?? null,
-      categoryId: category?.id ?? null,
+      category,
       title: faker.hacker.phrase(),
       description: faker.lorem.sentences(2),
       type: taskType,
@@ -96,7 +71,6 @@ const generateTasks = (
       recurrenceInterval: taskType === 'RECURRENT' ? faker.number.int({ min: 1, max: 7 }) : null,
       isDefault: faker.datatype.boolean({ probability: 0.1 }),
       createdAt: faker.date.past({ years: 1 }).toISOString(),
-      category: category ?? undefined,
       project: project ?? undefined
     };
   });
@@ -108,15 +82,13 @@ export async function GET() {
     const mockUserId = 'user_demo_123';
     
     // Generar datos mock
-    const categories = generateCategories();
     const projects = generateProjects(mockUserId);
-    const tasks = generateTasks(15, mockUserId, categories, projects);
+    const tasks = generateTasks(15, mockUserId, projects);
 
     return NextResponse.json({
       success: true,
       data: {
         tasks,
-        categories,
         projects,
         user: {
           clerkId: mockUserId,

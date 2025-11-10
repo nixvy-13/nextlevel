@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -12,6 +11,15 @@ datasource db {
 enum TaskType {
   ONCE
   RECURRENT
+}
+
+// Enum para las categorías de tareas
+enum TaskCategory {
+  SALUD
+  ENTRETENIMIENTO
+  SOCIALES
+  NATURALEZA
+  VARIADAS
 }
 
 // Modelo Users
@@ -26,16 +34,6 @@ model User {
   taskCompletions  TaskCompletion[]
   userAchievements UserAchievement[]
 
-}
-
-// Modelo Categories
-model Category {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String?
-  
-  // Relaciones
-  tasks Task[]
 }
 
 // Modelo Projects
@@ -54,24 +52,23 @@ model Project {
 
 // Modelo Tasks
 model Task {
-  id                  Int      @id @default(autoincrement())
+  id                  Int          @id @default(autoincrement())
   userId              String
   projectId           Int?
-  categoryId          Int?
+  category            TaskCategory?
   title               String
   description         String?
   type                TaskType
-  difficulty          Int      @default(1)
-  experienceReward    Int      @default(10)
+  difficulty          Int          @default(1)
+  experienceReward    Int          @default(10)
   recurrencePattern   String?
   recurrenceInterval  Int?
-  isDefault           Boolean  @default(false)
-  createdAt           DateTime @default(now())
+  isDefault           Boolean      @default(false)
+  createdAt           DateTime     @default(now())
   
   // Relaciones
   user            User             @relation(fields: [userId], references: [clerkId])
   project         Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  category        Category?        @relation(fields: [categoryId], references: [id])
   taskCompletions TaskCompletion[]
 }
 
