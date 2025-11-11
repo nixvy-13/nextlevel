@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
@@ -106,6 +107,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
       <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md p-0 gap-0 shadow-2xl shadow-purple-500/50">
         {/* Header con botón cerrar */}
         <DialogHeader className="relative p-6 pb-4 border-b border-purple-500/30">
+          <DialogTitle className="text-purple-300 font-bold text-lg">Crear Nueva Misión</DialogTitle>
           <button
             onClick={() => onOpenChange(false)}
             className="absolute right-4 top-4 rounded-sm opacity-70 transition-all hover:opacity-100 hover:bg-purple-500/20 focus:outline-none disabled:pointer-events-none p-1"
