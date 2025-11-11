@@ -36,42 +36,10 @@ interface Task {
   project?: Project;
 }
 
-interface MockDataResponse {
-  success: boolean;
-  data: {
-    tasks: Task[];
-    projects: Project[];
-    user: {
-      clerkId: string;
-      experience: number;
-      level: number;
-      createdAt: string;
-    };
-  };
-}
-
 export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchMockData() {
-      try {
-        const response = await fetch('/api/tasks/mock');
-        const result = await response.json() as MockDataResponse;
-        if (result.success) {
-          setTasks(result.data.tasks);
-        }
-      } catch (error) {
-        console.error('Error cargando datos mock:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchMockData();
-  }, []);
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
@@ -99,6 +67,14 @@ export default function Home() {
           </TabsList>
 
           <TabsContent value="lista" className="space-y-4">
+            {/* Tarjeta de misión ejemplo */}
+            <MissionCard 
+              type="Tipo"
+              title="Título"
+              xp={0}
+              description="Descripción de la misión"
+            />
+            {/* Esto deberia de estar listo para usarse cuando haga el endpoint del get de las misiones*/}
             {loading ? (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-lg">Cargando misiones...</p>
@@ -138,6 +114,7 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="kanban" className="mt-8">
+            {/* Esto deberia de estar listo para usarse cuando haga el endpoint del get de las misiones*/}
             {loading ? (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-lg">Cargando misiones...</p>
