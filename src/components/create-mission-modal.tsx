@@ -34,8 +34,7 @@ interface MissionData {
   category: TaskCategory;
   difficulty: number;
   experienceReward: number;
-  recurrencePattern?: string;
-  recurrenceInterval?: number;
+  recurrency?: number;
   isDefault: boolean;
 }
 
@@ -47,6 +46,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
   const [type, setType] = useState<TaskType>("ONCE");
   const [difficulty, setDifficulty] = useState("1");
   const [experienceReward, setExperienceReward] = useState("");
+  const [recurrency, setRecurrency] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -64,6 +64,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
         category,
         difficulty: parseInt(difficulty) || 1,
         experienceReward: parseInt(experienceReward) || 10,
+        ...(type === 'RECURRENT' && recurrency ? { recurrency: parseInt(recurrency) } : {}),
         isDefault: false,
       };
 
@@ -86,6 +87,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
       setType("ONCE");
       setDifficulty("1");
       setExperienceReward("");
+      setRecurrency("");
 
       // Cerrar el modal y notificar al componente padre
       onOpenChange(false);
@@ -184,6 +186,24 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
               </SelectContent>
             </Select>
           </div>
+
+          {/* Recurrencia (solo aparece si es recurrente) */}
+          {type === 'RECURRENT' && (
+            <div>
+              <label className="block text-purple-300 font-semibold mb-2 text-sm uppercase tracking-wide">
+                Recurrencia (días)
+              </label>
+              <Input 
+                placeholder="Ej: 1 (cada día), 7 (cada semana), 30 (cada mes)"
+                type="number"
+                min="1"
+                value={recurrency}
+                onChange={(e) => setRecurrency(e.target.value)}
+                disabled={isLoading}
+                className="bg-gray-900 border-2 border-purple-500/50 text-white placeholder:text-gray-500 rounded-sm h-10 focus:border-purple-400 focus:shadow-lg focus:shadow-purple-500/20 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
+              />
+            </div>
+          )}
 
           {/* Dificultad */}
           <div>

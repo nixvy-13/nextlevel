@@ -2,17 +2,18 @@ import { getDbAsync } from '@/lib/db';
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
+type TaskStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 
 interface TaskData {
   userId: string;
   title: string;
   description?: string;
   type: TaskType;
+  status?: TaskStatus;
   category?: TaskCategory;
   difficulty?: number;
   experienceReward?: number;
-  recurrencePattern?: string;
-  recurrenceInterval?: number;
+  recurrency?: number;
   isDefault?: boolean;
 }
 
@@ -29,11 +30,11 @@ export async function POST(req: Request) {
         title: taskData.title,
         description: taskData.description,
         type: taskData.type,
+        status: taskData.status || 'ACTIVE',
         category: taskData.category,
         difficulty: taskData.difficulty,
         experienceReward: taskData.experienceReward,
-        recurrencePattern: taskData.recurrencePattern,
-        recurrenceInterval: taskData.recurrenceInterval,
+        recurrency: taskData.recurrency,
         isDefault: taskData.isDefault,
       }
     });

@@ -22,6 +22,13 @@ enum TaskCategory {
   VARIADAS
 }
 
+// Enum para el estado de las tareas
+enum TaskStatus {
+  ACTIVE
+  DONE
+  INACTIVE
+}
+
 // Modelo Users
 model User {
   clerkId    String @id
@@ -52,19 +59,19 @@ model Project {
 
 // Modelo Tasks
 model Task {
-  id                  Int          @id @default(autoincrement())
-  userId              String
-  projectId           Int?
-  category            TaskCategory?
-  title               String
-  description         String?
-  type                TaskType
-  difficulty          Int          @default(1)
-  experienceReward    Int          @default(10)
-  recurrencePattern   String?
-  recurrenceInterval  Int?
-  isDefault           Boolean      @default(false)
-  createdAt           DateTime     @default(now())
+  id                Int          @id @default(autoincrement())
+  userId            String
+  projectId         Int?
+  category          TaskCategory?
+  title             String
+  description       String?
+  type              TaskType
+  status            TaskStatus   @default(ACTIVE)
+  difficulty        Int          @default(1)
+  experienceReward  Int          @default(10)
+  recurrency        Int?
+  isDefault         Boolean      @default(false)
+  createdAt         DateTime     @default(now())
   
   // Relaciones
   user            User             @relation(fields: [userId], references: [clerkId])
