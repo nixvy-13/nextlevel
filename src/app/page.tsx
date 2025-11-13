@@ -65,6 +65,29 @@ export default function Home() {
     fetchUserTasks();
   }, []);
 
+  // Función para eliminar una tarea
+  const handleDeleteTask = async (taskId: number) => {
+    try {
+      const response = await fetch('/api/tasks/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar la tarea');
+      }
+
+      // Actualizar la lista de tareas removiendo la tarea eliminada
+      setTasks(tasks.filter(task => task.id !== taskId));
+      console.log('Tarea eliminada exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar la tarea:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -90,39 +113,82 @@ export default function Home() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="lista" className="space-y-4">
+          <TabsContent value="lista" className="space-y-8">
             {loading ? (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-lg">Cargando misiones...</p>
               </div>
-            ) : tasks.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-400 text-lg">No hay misiones disponibles</p>
-              </div>
             ) : (
-              tasks.map((task) => (
-                <MissionCard 
-                  key={task.id}
-                  type={task.category || task.type}
-                  title={task.title}
-                  xp={task.experienceReward}
-                  description={task.description || 'Sin descripción'}
-                  onComplete={() => console.log('Completar tarea:', task.id)}
-                  onEdit={() => console.log('Editar tarea:', task.id)}
-                  onDelete={() => console.log('Borrar tarea:', task.id)}
-                />
-              ))
-            )}
+              <>
+                {/* Sección de Tareas Activas */}
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wide">
+                    Tareas Pendientes
+                  </h2>
+                  {tasks.filter(task => task.status === 'ACTIVE').length === 0 ? (
+                    <div className="text-center py-8 bg-gray-900/50 rounded-sm border-2 border-gray-700">
+                      <p className="text-gray-400 text-lg">No hay tareas pendientes</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {tasks
+                        .filter(task => task.status === 'ACTIVE')
+                        .map((task) => (
+                          <MissionCard 
+                            key={task.id}
+                            type={task.category || task.type}
+                            title={task.title}
+                            xp={task.experienceReward}
+                            description={task.description || 'Sin descripción'}
+                            onComplete={() => console.log('Completar tarea:', task.id)}
+                            onEdit={() => console.log('Editar tarea:', task.id)}
+                            onDelete={() => handleDeleteTask(task.id)}
+                          />
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
 
-            {/* Botón para crear misión */}
-            <div className="flex justify-center pt-6">
-              <Button 
-                onClick={() => setIsCreateModalOpen(true)}
-                className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-12 py-6 text-lg font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-400/60 transition-all"
-              >
-                Crear Misión
-              </Button>
-            </div>
+                {/* Sección de Tareas Completadas */}
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wide">
+                    Tareas Completadas
+                  </h2>
+                  {tasks.filter(task => task.status === 'DONE').length === 0 ? (
+                    <div className="text-center py-8 bg-gray-900/50 rounded-sm border-2 border-gray-700">
+                      <p className="text-gray-400 text-lg">No hay tareas completadas</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {tasks
+                        .filter(task => task.status === 'DONE')
+                        .map((task) => (
+                          <MissionCard 
+                            key={task.id}
+                            type={task.category || task.type}
+                            title={task.title}
+                            xp={task.experienceReward}
+                            description={task.description || 'Sin descripción'}
+                            showActions={false}
+                          />
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+
+                {/* Botón para crear misión */}
+                <div className="flex justify-center pt-6">
+                  <Button 
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-12 py-6 text-lg font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-400/60 transition-all"
+                  >
+                    Crear Misión
+                  </Button>
+                </div>
+              </>
+            )}
           </TabsContent>
 
           <TabsContent value="calendario" className="mt-8">
