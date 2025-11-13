@@ -1,4 +1,6 @@
 import { getDbAsync } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
@@ -19,8 +21,17 @@ interface TaskData {
 
 export async function POST(req: Request) {
   try {
-    const db = await getDbAsync();
     
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const db = await getDbAsync();    
     
     const taskData = await req.json() as TaskData;
     

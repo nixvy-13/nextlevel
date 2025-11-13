@@ -1,5 +1,5 @@
 import { getDbAsync } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import {NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
 export async function GET(req: Request) {
@@ -13,10 +13,12 @@ export async function GET(req: Request) {
       );
     }
     
+    console.log('userId', userId);
+
     const db = await getDbAsync();
     const tasks = await db.task.findMany({
       where: {
-        isDefault: true,
+        userId: userId,
       },
     });
     return NextResponse.json(tasks);

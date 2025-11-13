@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MissionCard } from "@/components/mission-card";
 import { MissionsCalendar } from "@/components/missions-calendar";
+import { KanbanBoard } from "@/components/kanban-board";
 import { CreateMissionModal } from "@/components/create-mission-modal";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
+type TaskStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 
 interface Project {
   id: number;
@@ -27,10 +29,11 @@ interface Task {
   title: string;
   description: string | null;
   type: TaskType;
+  status: TaskStatus;
   difficulty: number;
   experienceReward: number;
-  recurrencePattern: string | null;
-  recurrenceInterval: number | null;
+  recurrencePattern?: string | null;
+  recurrenceInterval?: number | null;
   isDefault: boolean;
   createdAt: string;
   project?: Project;
@@ -40,6 +43,27 @@ export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Cargar las tareas del usuario al montar el componente
+  useEffect(() => {
+    const fetchUserTasks = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/tasks/get');
+        if (!response.ok) {
+          throw new Error('Error al cargar las tareas');
+        }
+        const data = await response.json() as Task[];
+        setTasks(data);
+      } catch (error) {
+        console.error('Error al cargar las tareas del usuario:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserTasks();
+  }, []);
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
@@ -67,14 +91,6 @@ export default function Home() {
           </TabsList>
 
           <TabsContent value="lista" className="space-y-4">
-            {/* Tarjeta de misión ejemplo */}
-            <MissionCard 
-              type="Tipo"
-              title="Título"
-              xp={0}
-              description="Descripción de la misión"
-            />
-            {/* Esto deberia de estar listo para usarse cuando haga el endpoint del get de las misiones*/}
             {loading ? (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-lg">Cargando misiones...</p>
@@ -114,77 +130,7 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="kanban" className="mt-8">
-            {/* Esto deberia de estar listo para usarse cuando haga el endpoint del get de las misiones*/}
-            {loading ? (
-              <div className="text-center py-12">
-                <p className="text-gray-400 text-lg">Cargando misiones...</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Columna: Por hacer */}
-                <div className="flex flex-col min-h-[700px]">
-                  <div className="bg-red-900/30 border-2 border-red-800/50 rounded-sm p-6 flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
-                      Por hacer
-                    </h3>
-                    <div className="space-y-4">
-                      {tasks.slice(0, Math.ceil(tasks.length / 3)).map((task) => (
-                        <MissionCard 
-                          key={task.id}
-                          type={task.category || task.type}
-                          title={task.title}
-                          xp={task.experienceReward}
-                          description={task.description || 'Sin descripción'}
-                          showActions={false}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Columna: En progreso */}
-                <div className="flex flex-col min-h-[700px]">
-                  <div className="bg-yellow-900/30 border-2 border-yellow-700/50 rounded-sm p-6 flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
-                      En progreso
-                    </h3>
-                    <div className="space-y-4">
-                      {tasks.slice(Math.ceil(tasks.length / 3), Math.ceil(tasks.length * 2 / 3)).map((task) => (
-                        <MissionCard 
-                          key={task.id}
-                          type={task.category || task.type}
-                          title={task.title}
-                          xp={task.experienceReward}
-                          description={task.description || 'Sin descripción'}
-                          showActions={false}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Columna: Hechas */}
-                <div className="flex flex-col min-h-[700px]">
-                  <div className="bg-green-900/30 border-2 border-green-800/50 rounded-sm p-6 flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-6 text-center uppercase tracking-wide">
-                      Hechas
-                    </h3>
-                    <div className="space-y-4">
-                      {tasks.slice(Math.ceil(tasks.length * 2 / 3)).map((task) => (
-                        <MissionCard 
-                          key={task.id}
-                          type={task.category || task.type}
-                          title={task.title}
-                          xp={task.experienceReward}
-                          description={task.description || 'Sin descripción'}
-                          showActions={false}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            <KanbanBoard tasks={tasks} loading={loading} />
           </TabsContent>
         </Tabs>
         {/* Modal de creación de misión */}
