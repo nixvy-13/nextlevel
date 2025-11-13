@@ -5,6 +5,29 @@ const prisma = new PrismaClient();
 async function main() {
   const userId = "monokrome";
 
+  // CREAR USUARIO PRIMERO
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { clerkId: userId }
+    });
+    
+    if (!existingUser) {
+      await prisma.user.create({
+        data: {
+          clerkId: userId,
+          experience: 0,
+          level: 1,
+        },
+      });
+      console.log(`Usuario creado: ${userId}`);
+    } else {
+      console.log(`Usuario ya existe: ${userId}`);
+    }
+  } catch (error) {
+    console.error(`Error al crear usuario:`, error);
+  }
+
+  // LUEGO CREAR LAS TAREAS
   const defaultMissions = [
     // SALUD
     {
@@ -187,8 +210,6 @@ async function main() {
       recurrency: 7,
     },
   ];
-
-  console.log("🌱 Iniciando seeder de misiones por defecto...");
 
   for (const mission of defaultMissions) {
     try {
