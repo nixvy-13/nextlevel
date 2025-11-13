@@ -7,6 +7,7 @@ import { MissionCard } from "@/components/mission-card";
 import { MissionsCalendar } from "@/components/missions-calendar";
 import { KanbanBoard } from "@/components/kanban-board";
 import { CreateMissionModal } from "@/components/create-mission-modal";
+import { UpdateMissionModal } from "@/components/update-mission-modal";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
@@ -41,6 +42,8 @@ interface Task {
 
 export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -85,6 +88,37 @@ export default function Home() {
       console.log('Tarea eliminada exitosamente');
     } catch (error) {
       console.error('Error al eliminar la tarea:', error);
+    }
+  };
+
+  // Función para abrir el modal de edición
+  const handleEditTask = (task: Task) => {
+    setSelectedTask(task);
+    setIsUpdateModalOpen(true);
+  };
+
+  // Función para actualizar una tarea
+  const handleUpdateTask = async (taskId: number, data: any) => {
+    try {
+      const response = await fetch('/api/tasks/modify', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId, ...data }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar la tarea');
+      }
+
+      const updatedTask = await response.json() as Task;
+
+      // Actualizar la lista de tareas con la tarea modificada
+      setTasks(tasks.map(task => task.id === taskId ? updatedTask : task));
+      console.log('Tarea actualizada exitosamente');
+    } catch (error) {
+      console.error('Error al actualizar la tarea:', error);
     }
   };
 
@@ -141,7 +175,7 @@ export default function Home() {
                             xp={task.experienceReward}
                             description={task.description || 'Sin descripción'}
                             onComplete={() => console.log('Completar tarea:', task.id)}
-                            onEdit={() => console.log('Editar tarea:', task.id)}
+                            onEdit={() => handleEditTask(task)}
                             onDelete={() => handleDeleteTask(task.id)}
                           />
                         ))
@@ -201,8 +235,21 @@ export default function Home() {
         </Tabs>
         {/* Modal de creación de misión */}
         <CreateMissionModal
-        open={isCreateModalOpen}
-        onOpenChange={setIsCreateModalOpen}
+          open={isCreateModalOpen}
+          onOpenChange={setIsCreateModalOpen}
+        />
+        
+        {/* Modal de edición de misión */}
+        <UpdateMissionModal
+          open={isUpdateModalOpen}
+          onOpenChange={setIsUpdateModalOpen}
+          taskId={selectedTask?.id}
+          initialTitle={selectedTask?.title}
+          initialDescription={selectedTask?.description || ""}
+          initialXp={selectedTask?.experienceReward}
+          initialType={selectedTask?.type as any}
+          initialRecurrency={selectedTask?.recurrencePattern ? parseInt(selectedTask.recurrencePattern) : 0}
+          onUpdate={handleUpdateTask}
         />
       </div>
     </div>
