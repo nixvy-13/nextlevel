@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
@@ -40,7 +40,7 @@ interface MissionData {
 }
 
 export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: CreateMissionModalProps) {
-  const userId = useUser().user?.id;
+  const { userId } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<TaskCategory>("VARIADAS");
@@ -57,8 +57,12 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
     setIsLoading(true);
 
     try {
+      if (!userId) {
+        throw new Error("No se pudo obtener la información del usuario. Por favor, inicia sesión.");
+      }
+
       const missionData: MissionData = {
-        userId: userId || "",
+        userId,
         title,
         description,
         type,
@@ -89,8 +93,8 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
       setDifficulty("1");
       setExperienceReward("");
       setRecurrency("");
+       
 
-      // Cerrar el modal y notificar al componente padre
       onOpenChange(false);
       if (onMissionCreated) {
         onMissionCreated();
