@@ -122,6 +122,43 @@ export default function Home() {
     }
   };
 
+  // Función para completar una tarea
+  const handleCompleteTask = async (taskId: number) => {
+    try {
+      const response = await fetch('/api/tasks/markAsCompleted', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al completar la tarea');
+      }
+
+      const result = await response.json() as {
+        leveledUp: boolean;
+        newLevel: number;
+        xpGained: number;
+      };
+
+      // Actualizar la tarea en la lista (cambiar estado a DONE)
+      setTasks(tasks.map(task => 
+        task.id === taskId 
+          ? { ...task, status: 'DONE' }
+          : task
+      ));
+
+      console.log('Tarea completada exitosamente');
+      if (result.leveledUp) {
+        console.log(`¡Felicidades! Has subido al nivel ${result.newLevel}`);
+      }
+    } catch (error) {
+      console.error('Error al completar la tarea:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -174,7 +211,7 @@ export default function Home() {
                             title={task.title}
                             xp={task.experienceReward}
                             description={task.description || 'Sin descripción'}
-                            onComplete={() => console.log('Completar tarea:', task.id)}
+                            onComplete={() => handleCompleteTask(task.id)}
                             onEdit={() => handleEditTask(task)}
                             onDelete={() => handleDeleteTask(task.id)}
                           />

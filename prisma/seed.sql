@@ -38,3 +38,4 @@ VALUES
   ('monokrome', 'VARIADAS', 'Resolver un puzzle o acertijo', 'Completa un puzzle o resuelve un acertijo desafiante', 'ONCE', 'ACTIVE', 2, 25, NULL, 1, datetime('now')),
   ('monokrome', 'VARIADAS', 'Organizar tu espacio', 'Ordena y organiza un área de tu casa', 'RECURRENT', 'ACTIVE', 1, 15, 7, 1, datetime('now'));
 
+
