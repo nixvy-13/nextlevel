@@ -1,10 +1,43 @@
 "use client"
 
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 
 export default function PerfilPage() {
   const { user } = useUser();
+  const [level, setLevel] = useState(1);
+  const [experience, setExperience] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const [lvResponse, xpResponse] = await Promise.all([
+          fetch('/api/users/getLv'),
+          fetch('/api/users/getXp')
+        ]);
+
+        if (lvResponse.ok) {
+          const lvData = await lvResponse.json() as { level: number };
+          setLevel(lvData.level);
+        }
+
+        if (xpResponse.ok) {
+          const xpData = await xpResponse.json() as { experience: number };
+          setExperience(xpData.experience);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -23,7 +56,7 @@ export default function PerfilPage() {
               Nivel - Xp
             </h2>
             <p className="text-white text-lg font-medium mb-6">
-              Nivel 1 - 100 XP
+              {loading ? 'Cargando...' : `Nivel ${level} - ${experience} XP`}
             </p>
 
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
