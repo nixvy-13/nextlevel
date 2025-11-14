@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown } from "lucide-react";
+import { Eye } from "lucide-react";
 
 interface MissionCardProps {
   type?: string;
@@ -14,6 +14,7 @@ interface MissionCardProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onAdd?: () => void;
+  onDetails?: () => void;
   showActions?: boolean;
 }
 
@@ -40,6 +41,7 @@ export function MissionCard({
   onEdit,
   onDelete,
   onAdd,
+  onDetails,
   showActions = true,
 }: MissionCardProps) {
   const isStore = variant === "store";
@@ -66,15 +68,21 @@ export function MissionCard({
               >
                 Añadir
               </Button>
-              <button className="text-white hover:text-purple-200 transition-colors">
-                <ChevronDown className="w-6 h-6" />
+              <button 
+                onClick={onDetails}
+                className={`${colors.text} hover:text-white transition-colors`}
+              >
+                <Eye className="w-6 h-6" />
               </button>
             </div>
           )}
           
-          {!isStore && (
-            <button className="text-purple-400 hover:text-purple-300 transition-colors">
-              <ChevronDown className="w-6 h-6" />
+          {!isStore && showActions && (
+            <button 
+              onClick={onDetails}
+              className={`${colors.text} hover:text-white transition-colors`}
+            >
+              <Eye className="w-6 h-6" />
             </button>
           )}
         </div>

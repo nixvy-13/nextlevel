@@ -8,6 +8,7 @@ import { MissionsCalendar } from "@/components/missions-calendar";
 import { KanbanBoard } from "@/components/kanban-board";
 import { CreateMissionModal } from "@/components/create-mission-modal";
 import { UpdateMissionModal } from "@/components/update-mission-modal";
+import { MissionDetailsModal } from "@/components/mission-details-modal";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
@@ -43,28 +44,30 @@ interface Task {
 export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Función para cargar las tareas del usuario
+  const fetchUserTasks = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/tasks/get');
+      if (!response.ok) {
+        throw new Error('Error al cargar las tareas');
+      }
+      const data = await response.json() as Task[];
+      setTasks(data);
+    } catch (error) {
+      console.error('Error al cargar las tareas del usuario:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Cargar las tareas del usuario al montar el componente
   useEffect(() => {
-    const fetchUserTasks = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/tasks/get');
-        if (!response.ok) {
-          throw new Error('Error al cargar las tareas');
-        }
-        const data = await response.json() as Task[];
-        setTasks(data);
-      } catch (error) {
-        console.error('Error al cargar las tareas del usuario:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserTasks();
   }, []);
 
@@ -95,6 +98,12 @@ export default function Home() {
   const handleEditTask = (task: Task) => {
     setSelectedTask(task);
     setIsUpdateModalOpen(true);
+  };
+
+  // Función para abrir el modal de detalles
+  const handleDetailsTask = (task: Task) => {
+    setSelectedTask(task);
+    setIsDetailsModalOpen(true);
   };
 
   // Función para actualizar una tarea
@@ -214,6 +223,7 @@ export default function Home() {
                             onComplete={() => handleCompleteTask(task.id)}
                             onEdit={() => handleEditTask(task)}
                             onDelete={() => handleDeleteTask(task.id)}
+                            onDetails={() => handleDetailsTask(task)}
                           />
                         ))
                       }
@@ -274,6 +284,7 @@ export default function Home() {
         <CreateMissionModal
           open={isCreateModalOpen}
           onOpenChange={setIsCreateModalOpen}
+          onMissionCreated={fetchUserTasks}
         />
         
         {/* Modal de edición de misión */}
@@ -287,6 +298,19 @@ export default function Home() {
           initialType={selectedTask?.type as any}
           initialRecurrency={selectedTask?.recurrencePattern ? parseInt(selectedTask.recurrencePattern) : 0}
           onUpdate={handleUpdateTask}
+        />
+
+        {/* Modal de detalles de misión */}
+        <MissionDetailsModal
+          open={isDetailsModalOpen}
+          onOpenChange={setIsDetailsModalOpen}
+          missionName={selectedTask?.title}
+          missionType={selectedTask?.category}
+          description={selectedTask?.description}
+          xp={selectedTask?.experienceReward}
+          difficulty={selectedTask?.difficulty}
+          missionType2={selectedTask?.type}
+          recurrence={selectedTask?.recurrencePattern ? parseInt(selectedTask.recurrencePattern) : 0}
         />
       </div>
     </div>

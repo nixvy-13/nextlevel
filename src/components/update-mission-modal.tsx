@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 
@@ -88,10 +89,13 @@ export function UpdateMissionModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md p-0 gap-0 shadow-2xl shadow-purple-500/50">
+        <VisuallyHidden.Root>
+          <DialogTitle>Actualizar Misión</DialogTitle>
+        </VisuallyHidden.Root>
         {/* Header con botón cerrar */}
-        <DialogHeader className="relative p-6 pb-4 border-b border-purple-500/30">
-          <DialogTitle className="text-purple-300 font-bold text-lg">Actualizar Misión</DialogTitle>
-        </DialogHeader>
+        <div className="relative p-6 pb-4 border-b border-purple-500/30">
+          <h2 className="text-purple-300 font-bold text-lg">Actualizar Misión</h2>
+        </div>
 
         {/* Formulario */}
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4">
