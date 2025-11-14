@@ -23,6 +23,13 @@ interface Project {
   createdAt: string;
 }
 
+interface TaskCompletion {
+  id: number;
+  taskId: number;
+  userId: string;
+  completedAt: string;
+}
+
 interface Task {
   id: number;
   userId: string;
@@ -39,6 +46,7 @@ interface Task {
   isDefault: boolean;
   createdAt: string;
   project?: Project;
+  taskCompletions?: TaskCompletion[];
 }
 
 export default function Home() {
@@ -150,12 +158,14 @@ export default function Home() {
         leveledUp: boolean;
         newLevel: number;
         xpGained: number;
+        task: Task;
+        completedAt: string;
       };
 
-      // Actualizar la tarea en la lista (cambiar estado a DONE)
+      // Actualizar la tarea en la lista con la información completa del endpoint
       setTasks(tasks.map(task => 
         task.id === taskId 
-          ? { ...task, status: 'DONE' }
+          ? result.task
           : task
       ));
 
@@ -251,6 +261,7 @@ export default function Home() {
                             title={task.title}
                             xp={task.experienceReward}
                             description={task.description || 'Sin descripción'}
+                            completedAt={task.taskCompletions?.[0]?.completedAt}
                             showActions={false}
                           />
                         ))

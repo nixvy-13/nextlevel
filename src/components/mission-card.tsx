@@ -10,6 +10,7 @@ interface MissionCardProps {
   xp?: number;
   description?: string;
   variant?: "default" | "store";
+  completedAt?: string;
   onComplete?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -37,6 +38,7 @@ export function MissionCard({
   xp = 0,
   description = "Descripción de la misión",
   variant = "default",
+  completedAt,
   onComplete,
   onEdit,
   onDelete,
@@ -46,6 +48,19 @@ export function MissionCard({
 }: MissionCardProps) {
   const isStore = variant === "store";
   const colors = getCategoryColor(type);
+  
+  // Formatear la fecha de completación
+  const formatCompletedDate = (dateString?: string) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
   
   return (
     <Card className={`bg-gradient-to-br from-gray-900 to-gray-950 border-2 ${colors.border} shadow-xl ${colors.shadow} rounded-sm overflow-hidden hover:${colors.border.replace('border-', 'border-')} transition-all`}>
@@ -58,6 +73,11 @@ export function MissionCard({
             <CardDescription className={`${isStore ? 'text-white/80' : 'text-gray-400'} mt-2`}>
               {description}
             </CardDescription>
+            {completedAt && (
+              <div className={`${colors.text} text-sm mt-2 font-semibold`}>
+                ✓ Completado: {formatCompletedDate(completedAt)}
+              </div>
+            )}
           </div>
           
           {isStore && showActions && (

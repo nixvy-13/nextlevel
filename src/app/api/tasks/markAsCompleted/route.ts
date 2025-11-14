@@ -61,7 +61,7 @@ export async function PUT(req: Request) {
     });
 
     // Crear registro en TaskCompletion
-    await db.taskCompletion.create({
+    const taskCompletion = await db.taskCompletion.create({
       data: {
         taskId: taskId,
         userId: userId,
@@ -96,13 +96,17 @@ export async function PUT(req: Request) {
     return NextResponse.json(
       {
         message: 'Task completed successfully',
-        task: updatedTask,
+        task: {
+          ...updatedTask,
+          taskCompletions: [taskCompletion],
+        },
         user: updatedUser,
         xpGained: xpGain,
         leveledUp: xpResult.leveledUp,
         newLevel: xpResult.newLevel,
         oldLevel: xpResult.oldLevel,
         newTotalXp: xpResult.newTotalXp,
+        completedAt: taskCompletion.completedAt,
       },
       { status: 200 }
     );

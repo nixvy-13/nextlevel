@@ -20,6 +20,17 @@ export async function GET(req: Request) {
       where: {
         userId: userId,
       },
+      include: {
+        taskCompletions: {
+          where: {
+            userId: userId,
+          },
+          orderBy: {
+            completedAt: 'desc',
+          },
+          take: 1,
+        },
+      },
     });
     return NextResponse.json(tasks);
   } catch (error) {
