@@ -2,12 +2,15 @@ import { getDbAsync } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
+type ProjectStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
+
 interface ProjectData {
   userId: string;
   title: string;
   description?: string;
   difficulty?: number;
   experienceReward?: number;
+  status?: ProjectStatus;
 }
 
 export async function POST(req: Request) {
@@ -26,29 +29,33 @@ export async function POST(req: Request) {
     
     const projectData = await req.json() as ProjectData;
     
-    const newProject = await db.task.create({
+    // Validar que el userId del request coincida con el usuario autenticado
+    if (projectData.userId !== userId) {
+      return NextResponse.json(
+        { error: 'No tienes permisos para crear un proyecto para otro usuario' },
+        { status: 403 }
+      );
+    }
+
+    const newProject = await db.project.create({
       data: {
         userId: projectData.userId,
         title: projectData.title,
         description: projectData.description,
-        status: taskData.status || 'ACTIVE',
-        category: taskData.category,
-        difficulty: taskData.difficulty,
-        experienceReward: taskData.experienceReward,
-        recurrency: taskData.recurrency,
-        isDefault: taskData.isDefault,
+        status: projectData.status || 'ACTIVE',
+        experienceReward: projectData.experienceReward,
+      },
+      include: {
+        tasks: true,
       }
     });
     
-    return new Response(JSON.stringify(newTask), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return NextResponse.json(newProject, { status: 201 });
   } catch (error) {
-    console.error('Error creando tarea:', error);
-    return new Response(JSON.stringify({ error: 'Error interno' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    console.error('Error creando proyecto:', error);
+    return NextResponse.json(
+      { error: 'Error interno' },
+      { status: 500 }
+    );
   }
 }

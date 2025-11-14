@@ -9,6 +9,7 @@ import { KanbanBoard } from "@/components/kanban-board";
 import { CreateMissionModal } from "@/components/create-mission-modal";
 import { UpdateMissionModal } from "@/components/update-mission-modal";
 import { MissionDetailsModal } from "@/components/mission-details-modal";
+import { CreateProjectModal } from "@/components/create-project-modal";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
@@ -51,6 +52,7 @@ interface Task {
 
 export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -270,13 +272,19 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Botón para crear misión */}
-                <div className="flex justify-center pt-6">
+                {/* Botones para crear misión y proyecto */}
+                <div className="flex justify-center gap-4 pt-6">
                   <Button 
                     onClick={() => setIsCreateModalOpen(true)}
                     className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-12 py-6 text-lg font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-400/60 transition-all"
                   >
                     Crear Misión
+                  </Button>
+                  <Button 
+                    onClick={() => setIsCreateProjectModalOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-2 border-blue-500 hover:border-blue-400 rounded-sm px-12 py-6 text-lg font-bold shadow-2xl shadow-blue-500/50 hover:shadow-blue-400/60 transition-all"
+                  >
+                    Crear Proyecto
                   </Button>
                 </div>
               </>
@@ -296,6 +304,13 @@ export default function Home() {
           open={isCreateModalOpen}
           onOpenChange={setIsCreateModalOpen}
           onMissionCreated={fetchUserTasks}
+        />
+
+        {/* Modal de creación de proyecto */}
+        <CreateProjectModal
+          open={isCreateProjectModalOpen}
+          onOpenChange={setIsCreateProjectModalOpen}
+          onProjectCreated={fetchUserTasks}
         />
         
         {/* Modal de edición de misión */}
