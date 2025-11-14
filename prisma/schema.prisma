@@ -29,6 +29,13 @@ enum TaskStatus {
   INACTIVE
 }
 
+// Enum para el estado de los proyectos
+enum ProjectStatus {
+  ACTIVE
+  DONE
+  INACTIVE
+}
+
 // Modelo Users
 model User {
   clerkId    String @id
@@ -50,6 +57,7 @@ model Project {
   title       String
   description String?
   isPublic    Boolean  @default(false)
+  status      ProjectStatus @default(ACTIVE)
   experienceReward  Int          @default(100)
   createdAt   DateTime @default(now())
   
