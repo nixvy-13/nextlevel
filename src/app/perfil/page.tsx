@@ -8,6 +8,8 @@ export default function PerfilPage() {
   const { user } = useUser();
   const [level, setLevel] = useState(1);
   const [experience, setExperience] = useState(0);
+  const [currentLevelXp, setCurrentLevelXp] = useState(0);
+  const [nextLevelXp, setNextLevelXp] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,8 +27,15 @@ export default function PerfilPage() {
         }
 
         if (xpResponse.ok) {
-          const xpData = await xpResponse.json() as { experience: number };
+          const xpData = await xpResponse.json() as {
+            experience: number;
+            currentLevelXp: number;
+            nextLevelXp: number;
+            progressPercentage: number;
+          };
           setExperience(xpData.experience);
+          setCurrentLevelXp(xpData.currentLevelXp);
+          setNextLevelXp(xpData.nextLevelXp);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -53,10 +62,17 @@ export default function PerfilPage() {
             </p>
 
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
-              Nivel - Xp
+              Nivel
             </h2>
             <p className="text-white text-lg font-medium mb-6">
-              {loading ? 'Cargando...' : `Nivel ${level} - ${experience} XP`}
+              {loading ? 'Cargando...' : `Nivel ${level}`}
+            </p>
+
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
+              Experiencia
+            </h2>
+            <p className="text-white text-lg font-medium mb-6">
+              {loading ? 'Cargando...' : `${currentLevelXp} / ${nextLevelXp} XP`}
             </p>
 
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">

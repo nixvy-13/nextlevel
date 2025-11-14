@@ -17,6 +17,19 @@ interface MissionCardProps {
   showActions?: boolean;
 }
 
+// Mapeo de categorías a colores
+const categoryColors: Record<string, { bg: string; border: string; text: string; shadow: string }> = {
+  SALUD: { bg: "bg-blue-600/80", border: "border-blue-500", text: "text-blue-400", shadow: "shadow-blue-500/20" },
+  ENTRETENIMIENTO: { bg: "bg-red-600/80", border: "border-red-500", text: "text-red-400", shadow: "shadow-red-500/20" },
+  SOCIALES: { bg: "bg-yellow-600/80", border: "border-yellow-500", text: "text-yellow-400", shadow: "shadow-yellow-500/20" },
+  NATURALEZA: { bg: "bg-green-600/80", border: "border-green-500", text: "text-green-400", shadow: "shadow-green-500/20" },
+  VARIADAS: { bg: "bg-pink-600/80", border: "border-pink-500", text: "text-pink-400", shadow: "shadow-pink-500/20" },
+};
+
+function getCategoryColor(category?: string) {
+  return categoryColors[category || "VARIADAS"] || categoryColors["VARIADAS"];
+}
+
 export function MissionCard({
   type = "Tipo",
   title = "Título",
@@ -30,13 +43,14 @@ export function MissionCard({
   showActions = true,
 }: MissionCardProps) {
   const isStore = variant === "store";
+  const colors = getCategoryColor(type);
   
   return (
-    <Card className={`${isStore ? 'bg-purple-600/80' : 'bg-gradient-to-br from-gray-900 to-gray-950'} border-2 border-purple-500${isStore ? '' : '/50'} shadow-xl shadow-purple-500/20 rounded-sm overflow-hidden hover:border-purple-400 transition-all`}>
-      <CardHeader className={`pb-3 ${!isStore && 'border-b border-purple-500/30'}`}>
+    <Card className={`bg-gradient-to-br from-gray-900 to-gray-950 border-2 ${colors.border} shadow-xl ${colors.shadow} rounded-sm overflow-hidden hover:${colors.border.replace('border-', 'border-')} transition-all`}>
+      <CardHeader className={`pb-3 border-b ${colors.border.replace('border-', 'border-')}/30`}>
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <CardTitle className={`${isStore ? 'text-white' : 'text-purple-400'} text-lg font-bold ${isStore && 'mb-2'}`}>
+            <CardTitle className={`${colors.text} text-lg font-bold ${isStore && 'mb-2'}`}>
               {type} - {title} - {xp} Xp
             </CardTitle>
             <CardDescription className={`${isStore ? 'text-white/80' : 'text-gray-400'} mt-2`}>

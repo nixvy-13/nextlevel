@@ -1,11 +1,11 @@
 /**
  * Calcula los puntos XP necesarios para alcanzar un nivel específico
- * Usa una fórmula progresiva: 100 * nivel^1.5
- * Esto hace que cada nivel cuesta más que el anterior
+ * Usa una fórmula exponencial progresiva: 100 * (nivel - 1)^1.3
+ * Esto hace que nivel 2 requiera 100 XP y cada nivel posterior cueste más
  */
 export function calculateXpForLevel(level: number): number {
   if (level <= 1) return 0;
-  return Math.floor(100 * Math.pow(level, 1.3));
+  return Math.floor(100 * Math.pow(level - 1, 1.3));
 }
 
 /**
@@ -31,7 +31,6 @@ export function calculateLevelFromXp(totalXp: number): {
   progressPercentage: number;
 } {
   let level = 1;
-  let accumulatedXp = 0;
 
   // Encontrar el nivel actual
   while (true) {

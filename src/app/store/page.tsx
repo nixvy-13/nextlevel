@@ -8,7 +8,7 @@ interface Task {
   id: number;
   title: string;
   description: string;
-  xp: number;
+  experienceReward: number;
   category: string;
   isDefault: boolean;
 }
@@ -18,13 +18,13 @@ export default function StorePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Categorías de misiones
+  // Categorías de misiones con colores
   const categories = [
     { name: "SALUD", color: "bg-blue-600 hover:bg-blue-700 border-blue-500" },
     { name: "ENTRETENIMIENTO", color: "bg-red-600 hover:bg-red-700 border-red-500" },
     { name: "SOCIALES", color: "bg-yellow-600 hover:bg-yellow-700 border-yellow-500" },
     { name: "NATURALEZA", color: "bg-green-600 hover:bg-green-700 border-green-500" },
-    { name: "VARIADAS", color: "bg-purple-600 hover:bg-purple-700 border-purple-500" },
+    { name: "VARIADAS", color: "bg-pink-600 hover:bg-pink-700 border-pink-500" },
   ];
 
   // Cargar tareas por defecto al montar el componente
@@ -97,7 +97,7 @@ export default function StorePage() {
                 key={task.id}
                 type={task.category}
                 title={task.title}
-                xp={task.xp}
+                xp={task.experienceReward}
                 description={task.description}
                 variant="store"
               />
