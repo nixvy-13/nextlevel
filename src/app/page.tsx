@@ -316,8 +316,8 @@ export default function Home() {
           open={isDetailsModalOpen}
           onOpenChange={setIsDetailsModalOpen}
           missionName={selectedTask?.title}
-          missionType={selectedTask?.category}
-          description={selectedTask?.description}
+          missionType={selectedTask?.category ?? undefined}
+          description={selectedTask?.description ?? undefined}
           xp={selectedTask?.experienceReward}
           difficulty={selectedTask?.difficulty}
           missionType2={selectedTask?.type}

@@ -1,5 +1,5 @@
 import { getDbAsync } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
 type TaskType = 'ONCE' | 'RECURRENT';
