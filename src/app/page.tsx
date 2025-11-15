@@ -10,10 +10,12 @@ import { CreateMissionModal } from "@/components/create-mission-modal";
 import { UpdateMissionModal } from "@/components/update-mission-modal";
 import { MissionDetailsModal } from "@/components/mission-details-modal";
 import { CreateProjectModal } from "@/components/create-project-modal";
+import { ProjectCard } from "@/components/project-card";
 
 type TaskType = 'ONCE' | 'RECURRENT';
 type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'VARIADAS';
 type TaskStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
+type ProjectStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 
 interface Project {
   id: number;
@@ -21,7 +23,10 @@ interface Project {
   title: string;
   description: string | null;
   isPublic: boolean;
+  status: ProjectStatus;
+  experienceReward: number;
   createdAt: string;
+  tasks?: Task[];
 }
 
 interface TaskCompletion {
@@ -57,12 +62,12 @@ export default function Home() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Función para cargar las tareas del usuario
   const fetchUserTasks = async () => {
     try {
-      setLoading(true);
       const response = await fetch('/api/tasks/get');
       if (!response.ok) {
         throw new Error('Error al cargar las tareas');
@@ -71,14 +76,34 @@ export default function Home() {
       setTasks(data);
     } catch (error) {
       console.error('Error al cargar las tareas del usuario:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Cargar las tareas del usuario al montar el componente
+  // Función para cargar los proyectos del usuario
+  const fetchUserProjects = async () => {
+    try {
+      const response = await fetch('/api/projects/get');
+      if (!response.ok) {
+        throw new Error('Error al cargar los proyectos');
+      }
+      const data = await response.json() as Project[];
+      setProjects(data);
+    } catch (error) {
+      console.error('Error al cargar los proyectos del usuario:', error);
+    }
+  };
+
+  // Cargar las tareas y proyectos del usuario al montar el componente
   useEffect(() => {
-    fetchUserTasks();
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([fetchUserTasks(), fetchUserProjects()]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
   }, []);
 
   // Función para eliminar una tarea
@@ -171,6 +196,14 @@ export default function Home() {
           : task
       ));
 
+      // Actualizar proyectos si la tarea pertenece a uno
+      setProjects(projects.map(project => ({
+        ...project,
+        tasks: project.tasks?.map(task =>
+          task.id === taskId ? result.task : task
+        ) || [],
+      })));
+
       console.log('Tarea completada exitosamente');
       if (result.leveledUp) {
         console.log(`¡Felicidades! Has subido al nivel ${result.newLevel}`);
@@ -178,6 +211,34 @@ export default function Home() {
     } catch (error) {
       console.error('Error al completar la tarea:', error);
     }
+  };
+
+  // Función para eliminar un proyecto
+  const handleDeleteProject = async (projectId: number) => {
+    try {
+      const response = await fetch('/api/projects/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar el proyecto');
+      }
+
+      setProjects(projects.filter(project => project.id !== projectId));
+      console.log('Proyecto eliminado exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar el proyecto:', error);
+    }
+  };
+
+  // Función para editar un proyecto
+  const handleEditProject = (project: Project) => {
+    // TODO: Implementar modal de edición de proyecto
+    console.log('Editar proyecto:', project);
   };
 
   return (
@@ -272,6 +333,71 @@ export default function Home() {
                   )}
                 </div>
 
+                {/* Sección de Proyectos Activos */}
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wide">
+                    Proyectos Activos
+                  </h2>
+                  {projects.filter(project => project.status === 'ACTIVE').length === 0 ? (
+                    <div className="text-center py-8 bg-gray-900/50 rounded-sm border-2 border-gray-700">
+                      <p className="text-gray-400 text-lg">No hay proyectos activos</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {projects
+                        .filter(project => project.status === 'ACTIVE')
+                        .map((project) => (
+                          <ProjectCard
+                            key={project.id}
+                            id={project.id}
+                            title={project.title}
+                            description={project.description}
+                            status={project.status}
+                            experienceReward={project.experienceReward}
+                            tasks={project.tasks || []}
+                            createdAt={project.createdAt}
+                            onEdit={() => handleEditProject(project)}
+                            onDelete={() => handleDeleteProject(project.id)}
+                            onDetails={() => console.log('Ver detalles del proyecto')}
+                            onCompleteTask={handleCompleteTask}
+                          />
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+
+                {/* Sección de Proyectos Terminados */}
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wide">
+                    Proyectos Terminados
+                  </h2>
+                  {projects.filter(project => project.status === 'DONE').length === 0 ? (
+                    <div className="text-center py-8 bg-gray-900/50 rounded-sm border-2 border-gray-700">
+                      <p className="text-gray-400 text-lg">No hay proyectos terminados</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {projects
+                        .filter(project => project.status === 'DONE')
+                        .map((project) => (
+                          <ProjectCard
+                            key={project.id}
+                            id={project.id}
+                            title={project.title}
+                            description={project.description}
+                            status={project.status}
+                            experienceReward={project.experienceReward}
+                            tasks={project.tasks || []}
+                            createdAt={project.createdAt}
+                            showActions={false}
+                          />
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+
                 {/* Botones para crear misión y proyecto */}
                 <div className="flex justify-center gap-4 pt-6">
                   <Button 
@@ -310,7 +436,10 @@ export default function Home() {
         <CreateProjectModal
           open={isCreateProjectModalOpen}
           onOpenChange={setIsCreateProjectModalOpen}
-          onProjectCreated={fetchUserTasks}
+          onProjectCreated={() => {
+            fetchUserTasks();
+            fetchUserProjects();
+          }}
         />
         
         {/* Modal de edición de misión */}
