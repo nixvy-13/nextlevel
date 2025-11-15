@@ -259,16 +259,24 @@ export function CreateProjectModal({
                               `Subtarea ${index + 1}`}
                           </span>
                         </div>
-                        <button
-                          type="button"
+                        <div
+                          role="button"
+                          tabIndex={0}
                           onClick={(e) => {
                             e.stopPropagation()
                             remove(index)
                           }}
-                          className="p-1 text-red-400 hover:text-red-300 hover:bg-red-950/30 rounded transition-colors"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              remove(index)
+                            }
+                          }}
+                          className="p-1 text-red-400 hover:text-red-300 hover:bg-red-950/30 rounded transition-colors cursor-pointer"
                         >
                           <TrashIcon className="w-4 h-4" />
-                        </button>
+                        </div>
                       </CollapsibleTrigger>
 
                       <CollapsibleContent className="px-4 pb-4 pt-2 space-y-4 bg-gray-950/30 border-t border-gray-700">
