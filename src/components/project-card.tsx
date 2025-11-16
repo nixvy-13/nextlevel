@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
@@ -67,7 +67,7 @@ export function ProjectCard({
   description,
   status,
   experienceReward,
-  tasks,
+  tasks: initialTasks,
   createdAt,
   onEdit,
   onDelete,
@@ -79,6 +79,31 @@ export function ProjectCard({
   showActions = true,
 }: ProjectCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [loadingSubtasks, setLoadingSubtasks] = useState(false);
+  
+  // Cargar las subtareas cuando se abre/cierra la sección
+  useEffect(() => {
+    if (isOpen && tasks.length === 0) {
+      fetchSubTasks();
+    }
+  }, [isOpen]);
+
+  const fetchSubTasks = async () => {
+    try {
+      setLoadingSubtasks(true);
+      const response = await fetch(`/api/projects/getSubTasks?projectId=${id}`);
+      if (!response.ok) {
+        throw new Error('Error al cargar las subtareas');
+      }
+      const data = await response.json() as Task[];
+      setTasks(data);
+    } catch (error) {
+      console.error('Error al cargar las subtareas:', error);
+    } finally {
+      setLoadingSubtasks(false);
+    }
+  };
   
   const completedTasks = tasks.filter(task => task.status === 'DONE').length;
   const totalTasks = tasks.length;
@@ -152,10 +177,16 @@ export function ProjectCard({
               <span className="font-semibold text-gray-300">
                 Misiones del Proyecto ({totalTasks})
               </span>
+              {loadingSubtasks && <span className="text-gray-400 text-xs">Cargando...</span>}
             </CollapsibleTrigger>
             
             <CollapsibleContent className="space-y-2 mt-3 pt-3 border-t border-gray-700">
-              {tasks.map((task) => {
+              {loadingSubtasks ? (
+                <div className="text-center py-4 text-gray-400">
+                  Cargando subtareas...
+                </div>
+              ) : (
+                tasks.map((task) => {
                 const taskColors = getCategoryColor(task.category);
                 const isCompleted = task.status === 'DONE';
                 
@@ -192,7 +223,8 @@ export function ProjectCard({
                     </div>
                   </div>
                 );
-              })}
+              })
+              )}
             </CollapsibleContent>
           </Collapsible>
         )}
