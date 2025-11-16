@@ -126,6 +126,7 @@ export function CreateProjectModal({
               projectId: createdProject.id,
               title: subTask.title,
               description: subTask.description,
+              category: "PROYECTO",
               difficulty: subTask.difficulty,
               experienceReward: subTask.experienceReward,
               type: subTask.type,

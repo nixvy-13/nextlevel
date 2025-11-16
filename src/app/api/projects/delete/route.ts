@@ -47,7 +47,12 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // Eliminar el proyecto (las tareas se eliminarán en cascada por Prisma)
+    // Eliminar las tareas asociadas al proyecto primero
+    await db.task.deleteMany({
+      where: { projectId: projectId },
+    });
+
+    // Luego eliminar el proyecto
     const deletedProject = await db.project.delete({
       where: { id: projectId },
     });

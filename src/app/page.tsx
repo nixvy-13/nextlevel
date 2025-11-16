@@ -228,7 +228,9 @@ export default function Home() {
         throw new Error('Error al eliminar el proyecto');
       }
 
+      // Eliminar el proyecto y sus tareas asociadas del estado
       setProjects(projects.filter(project => project.id !== projectId));
+      setTasks(tasks.filter(task => task.projectId !== projectId));
       console.log('Proyecto eliminado exitosamente');
     } catch (error) {
       console.error('Error al eliminar el proyecto:', error);

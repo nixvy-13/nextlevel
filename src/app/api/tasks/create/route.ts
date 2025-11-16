@@ -8,6 +8,7 @@ type TaskStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 
 interface TaskData {
   userId: string;
+  projectId?: number;
   title: string;
   description?: string;
   type: TaskType;
@@ -38,6 +39,7 @@ export async function POST(req: Request) {
     const newTask = await db.task.create({
       data: {
         userId: taskData.userId,
+        projectId: taskData.projectId,
         title: taskData.title,
         description: taskData.description,
         type: taskData.type,
