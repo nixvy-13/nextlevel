@@ -33,6 +33,8 @@ interface SubTask {
   description?: string
   difficulty: number
   experienceReward: number
+  type: "ONCE" | "RECURRENT"
+  recurrency?: number
 }
 
 interface CreateProjectFormData {
@@ -126,7 +128,8 @@ export function CreateProjectModal({
               description: subTask.description,
               difficulty: subTask.difficulty,
               experienceReward: subTask.experienceReward,
-              type: "ONCE",
+              type: subTask.type,
+              recurrency: subTask.type === "RECURRENT" ? subTask.recurrency : undefined,
               status: "ACTIVE",
             }),
           })
@@ -221,6 +224,8 @@ export function CreateProjectModal({
                     description: "",
                     difficulty: 1,
                     experienceReward: 10,
+                    type: "ONCE",
+                    recurrency: undefined,
                   })
                 }
                 variant="outline"
@@ -311,6 +316,48 @@ export function CreateProjectModal({
                             {...form.register(`subTasks.${index}.description`)}
                           />
                         </Field>
+
+                        <Field>
+                          <FieldLabel htmlFor={`subtask-type-${index}`}>
+                            Tipo de Tarea
+                          </FieldLabel>
+                          <select
+                            id={`subtask-type-${index}`}
+                            className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                            {...form.register(`subTasks.${index}.type`)}
+                          >
+                            <option value="ONCE">Una sola vez</option>
+                            <option value="RECURRENT">Recurrente</option>
+                          </select>
+                        </Field>
+
+                        {form.watch(`subTasks.${index}.type`) === "RECURRENT" && (
+                          <Field>
+                            <FieldLabel htmlFor={`subtask-recurrency-${index}`}>
+                              Recurrencia (días)
+                            </FieldLabel>
+                            <Input
+                              id={`subtask-recurrency-${index}`}
+                              type="number"
+                              min="1"
+                              placeholder="Cada cuántos días se repite..."
+                              {...form.register(
+                                `subTasks.${index}.recurrency`,
+                                {
+                                  valueAsNumber: true,
+                                  min: { value: 1, message: "Mínimo 1 día" },
+                                }
+                              )}
+                            />
+                            {form.formState.errors.subTasks?.[index]?.recurrency && (
+                              <FieldError
+                                errors={[
+                                  form.formState.errors.subTasks[index]?.recurrency,
+                                ]}
+                              />
+                            )}
+                          </Field>
+                        )}
 
                         <div className="grid grid-cols-2 gap-4">
                           <Field>
