@@ -11,11 +11,13 @@ interface MissionCardProps {
   description?: string;
   variant?: "default" | "store";
   completedAt?: string;
+  isRecurrent?: boolean;
   onComplete?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
   onAdd?: () => void;
   onDetails?: () => void;
+  onClose?: () => void;
   showActions?: boolean;
 }
 
@@ -39,11 +41,13 @@ export function MissionCard({
   description = "Descripción de la misión",
   variant = "default",
   completedAt,
+  isRecurrent = false,
   onComplete,
   onEdit,
   onDelete,
   onAdd,
   onDetails,
+  onClose,
   showActions = true,
 }: MissionCardProps) {
   const isStore = variant === "store";
@@ -125,6 +129,15 @@ export function MissionCard({
             >
               Editar
             </Button>
+            {isRecurrent && (
+              <Button 
+                size="sm"
+                onClick={onClose}
+                className="bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-500 hover:border-orange-400 rounded-sm px-5 py-2 font-semibold transition-all shadow-md shadow-orange-500/30"
+              >
+                Finalizar
+              </Button>
+            )}
             <Button 
               size="sm"
               onClick={onDelete}

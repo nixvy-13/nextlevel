@@ -216,6 +216,47 @@ export default function Home() {
     }
   };
 
+  // Función para cerrar una tarea recurrente
+  const handleCloseRecurrentTask = async (taskId: number) => {
+    try {
+      const response = await fetch('/api/tasks/markAsClosed', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al cerrar la tarea recurrente');
+      }
+
+      const result = await response.json() as {
+        message: string;
+        task: Task;
+      };
+
+      // Actualizar la tarea en la lista con el nuevo estado
+      setTasks(tasks.map(task => 
+        task.id === taskId 
+          ? result.task
+          : task
+      ));
+
+      // Actualizar proyectos si la tarea pertenece a uno
+      setProjects(projects.map(project => ({
+        ...project,
+        tasks: project.tasks?.map(task =>
+          task.id === taskId ? result.task : task
+        ) || [],
+      })));
+
+      console.log('Tarea recurrente cerrada exitosamente');
+    } catch (error) {
+      console.error('Error al cerrar la tarea recurrente:', error);
+    }
+  };
+
   // Función para eliminar un proyecto
   const handleDeleteProject = async (projectId: number) => {
     try {
@@ -323,9 +364,11 @@ export default function Home() {
                             title={task.title}
                             xp={task.experienceReward}
                             description={task.description || 'Sin descripción'}
+                            isRecurrent={task.type === 'RECURRENT'}
                             onComplete={() => handleCompleteTask(task.id)}
                             onEdit={() => handleEditTask(task)}
                             onDelete={() => handleDeleteTask(task.id)}
+                            onClose={() => handleCloseRecurrentTask(task.id)}
                             onDetails={() => handleDetailsTask(task)}
                           />
                         ))
