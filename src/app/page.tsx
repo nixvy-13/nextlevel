@@ -570,7 +570,7 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="kanban" className="mt-8">
-            <KanbanBoard tasks={tasks} loading={loading} />
+            <KanbanBoard tasks={tasks} projects={projects} loading={loading} />
           </TabsContent>
         </Tabs>
         {/* Modal de creación de misión */}

@@ -30,6 +30,7 @@ const categoryColors: Record<string, { bg: string; border: string; text: string;
   SOCIALES: { bg: "bg-yellow-600/80", border: "border-yellow-500", text: "text-yellow-400", shadow: "shadow-yellow-500/20" },
   NATURALEZA: { bg: "bg-green-600/80", border: "border-green-500", text: "text-green-400", shadow: "shadow-green-500/20" },
   VARIADAS: { bg: "bg-pink-600/80", border: "border-pink-500", text: "text-pink-400", shadow: "shadow-pink-500/20" },
+  PROYECTO: { bg: "bg-orange-600/80", border: "border-orange-500", text: "text-orange-400", shadow: "shadow-orange-500/20" },
 };
 
 function getCategoryColor(category?: string) {

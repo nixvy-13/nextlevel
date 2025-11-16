@@ -12,6 +12,7 @@ interface Project {
   title: string;
   description: string | null;
   isPublic: boolean;
+  experienceReward: number;
   createdAt: string;
 }
 
@@ -35,13 +36,13 @@ interface Task {
 
 interface KanbanBoardProps {
   tasks: Task[];
+  projects: Project[];
   loading: boolean;
 }
 
-export function KanbanBoard({ tasks, loading }: KanbanBoardProps) {
+export function KanbanBoard({ tasks, projects, loading }: KanbanBoardProps) {
   // Filtrar tareas por estado
   const activeTasks = tasks.filter((task) => task.status === 'ACTIVE');
-  const inProgressTasks = tasks.filter((task) => task.status === 'INACTIVE');
   const doneTasks = tasks.filter((task) => task.status === 'DONE');
 
   if (loading) {
@@ -86,16 +87,16 @@ export function KanbanBoard({ tasks, loading }: KanbanBoardProps) {
             En progreso
           </h3>
           <div className="space-y-4">
-            {inProgressTasks.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No hay tareas en progreso</p>
+            {projects.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No hay proyectos</p>
             ) : (
-              inProgressTasks.map((task) => (
+              projects.map((project) => (
                 <MissionCard 
-                  key={task.id}
-                  type={task.category || task.type}
-                  title={task.title}
-                  xp={task.experienceReward}
-                  description={task.description || 'Sin descripción'}
+                  key={project.id}
+                  type="PROYECTO"
+                  title={project.title}
+                  xp={project.experienceReward}
+                  description={project.description || 'Sin descripción'}
                   showActions={false}
                 />
               ))
