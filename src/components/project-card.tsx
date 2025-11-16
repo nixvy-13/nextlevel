@@ -45,6 +45,7 @@ interface ProjectCardProps {
   onEditTask?: (task: Task) => void;
   onDeleteTask?: (taskId: number) => void;
   onDetailsTask?: (task: Task) => void;
+  onCompleteProject?: () => void;
   showActions?: boolean;
 }
 
@@ -76,6 +77,7 @@ export function ProjectCard({
   onEditTask,
   onDeleteTask,
   onDetailsTask,
+  onCompleteProject,
   showActions = true,
 }: ProjectCardProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -232,6 +234,13 @@ export function ProjectCard({
         {/* Acciones del proyecto */}
         {showActions && status === 'ACTIVE' && (
           <div className="flex gap-2 flex-wrap pt-2 border-t border-gray-700">
+            <Button
+              size="sm"
+              onClick={onCompleteProject}
+              className="bg-green-600 hover:bg-green-700 text-white border-2 border-green-500 hover:border-green-400 rounded-sm px-4 py-2 font-semibold transition-all shadow-md shadow-green-500/30"
+            >
+              ✓ Completar
+            </Button>
             <Button
               size="sm"
               onClick={onEdit}

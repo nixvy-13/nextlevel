@@ -353,6 +353,51 @@ export default function Home() {
     }
   };
 
+  // Función para completar un proyecto
+  const handleCompleteProject = async (projectId: number) => {
+    try {
+      const response = await fetch('/api/projects/markAsCompleted', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json() as any;
+        throw new Error(errorData.message || 'Error al completar el proyecto');
+      }
+
+      const result = await response.json() as {
+        message: string;
+        project: Project;
+        user: any;
+        xpGained: number;
+        leveledUp: boolean;
+        newLevel: number;
+        oldLevel: number;
+        newTotalXp: number;
+      };
+
+      // Actualizar la lista de proyectos moviendo el proyecto completado
+      setProjects(projects.map(project => 
+        project.id === projectId 
+          ? result.project
+          : project
+      ));
+
+      console.log('Proyecto completado exitosamente');
+      console.log(`¡Has ganado ${result.xpGained} XP!`);
+      if (result.leveledUp) {
+        console.log(`¡Felicidades! Has subido al nivel ${result.newLevel}`);
+      }
+    } catch (error) {
+      console.error('Error al completar el proyecto:', error);
+      alert(`Error: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -508,6 +553,7 @@ export default function Home() {
                             onDelete={() => handleDeleteProject(project.id)}
                             onDetails={() => console.log('Ver detalles del proyecto')}
                             onCompleteTask={handleCompleteTask}
+                            onCompleteProject={() => handleCompleteProject(project.id)}
                           />
                         ))
                       }
