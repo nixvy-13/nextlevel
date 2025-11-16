@@ -10,6 +10,7 @@ import { CreateMissionModal } from "@/components/create-mission-modal";
 import { UpdateMissionModal } from "@/components/update-mission-modal";
 import { MissionDetailsModal } from "@/components/mission-details-modal";
 import { CreateProjectModal } from "@/components/create-project-modal";
+import { UpdateProjectModal } from "@/components/update-project-modal";
 import { ProjectCard } from "@/components/project-card";
 
 type TaskType = 'ONCE' | 'RECURRENT';
@@ -59,8 +60,10 @@ export default function Home() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isUpdateProjectModalOpen, setIsUpdateProjectModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -239,8 +242,33 @@ export default function Home() {
 
   // Función para editar un proyecto
   const handleEditProject = (project: Project) => {
-    // TODO: Implementar modal de edición de proyecto
-    console.log('Editar proyecto:', project);
+    setSelectedProject(project);
+    setIsUpdateProjectModalOpen(true);
+  };
+
+  // Función para actualizar un proyecto
+  const handleUpdateProject = async (projectId: number, data: any) => {
+    try {
+      const response = await fetch('/api/projects/modify', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectId, ...data }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar el proyecto');
+      }
+
+      const updatedProject = await response.json() as Project;
+
+      // Actualizar la lista de proyectos con el proyecto modificado
+      setProjects(projects.map(project => project.id === projectId ? updatedProject : project));
+      console.log('Proyecto actualizado exitosamente');
+    } catch (error) {
+      console.error('Error al actualizar el proyecto:', error);
+    }
   };
 
   return (
@@ -468,6 +496,17 @@ export default function Home() {
           difficulty={selectedTask?.difficulty}
           missionType2={selectedTask?.type}
           recurrence={selectedTask?.recurrencePattern ? parseInt(selectedTask.recurrencePattern) : 0}
+        />
+
+        {/* Modal de edición de proyecto */}
+        <UpdateProjectModal
+          open={isUpdateProjectModalOpen}
+          onOpenChange={setIsUpdateProjectModalOpen}
+          projectId={selectedProject?.id}
+          initialTitle={selectedProject?.title}
+          initialDescription={selectedProject?.description || ""}
+          initialXp={selectedProject?.experienceReward}
+          onUpdate={handleUpdateProject}
         />
       </div>
     </div>
