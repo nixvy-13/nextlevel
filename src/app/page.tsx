@@ -257,6 +257,47 @@ export default function Home() {
     }
   };
 
+  // Función para reabrir una tarea recurrente
+  const handleReopenRecurrentTask = async (taskId: number) => {
+    try {
+      const response = await fetch('/api/tasks/markAsActive', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ taskId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al reabrir la tarea recurrente');
+      }
+
+      const result = await response.json() as {
+        message: string;
+        task: Task;
+      };
+
+      // Actualizar la tarea en la lista con el nuevo estado
+      setTasks(tasks.map(task => 
+        task.id === taskId 
+          ? result.task
+          : task
+      ));
+
+      // Actualizar proyectos si la tarea pertenece a uno
+      setProjects(projects.map(project => ({
+        ...project,
+        tasks: project.tasks?.map(task =>
+          task.id === taskId ? result.task : task
+        ) || [],
+      })));
+
+      console.log('Tarea recurrente reabierta exitosamente');
+    } catch (error) {
+      console.error('Error al reabrir la tarea recurrente:', error);
+    }
+  };
+
   // Función para eliminar un proyecto
   const handleDeleteProject = async (projectId: number) => {
     try {
@@ -364,11 +405,13 @@ export default function Home() {
                             title={task.title}
                             xp={task.experienceReward}
                             description={task.description || 'Sin descripción'}
+                            status={task.status}
                             isRecurrent={task.type === 'RECURRENT'}
                             onComplete={() => handleCompleteTask(task.id)}
                             onEdit={() => handleEditTask(task)}
                             onDelete={() => handleDeleteTask(task.id)}
                             onClose={() => handleCloseRecurrentTask(task.id)}
+                            onReopen={() => handleReopenRecurrentTask(task.id)}
                             onDetails={() => handleDetailsTask(task)}
                           />
                         ))
@@ -399,6 +442,38 @@ export default function Home() {
                             description={task.description || 'Sin descripción'}
                             completedAt={task.taskCompletions?.[0]?.completedAt}
                             showActions={false}
+                          />
+                        ))
+                      }
+                    </div>
+                  )}
+                </div>
+
+                {/* Sección de Tareas Finalizadas */}
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-6 uppercase tracking-wide">
+                    Tareas Finalizadas
+                  </h2>
+                  {tasks.filter(task => task.status === 'INACTIVE').length === 0 ? (
+                    <div className="text-center py-8 bg-gray-900/50 rounded-sm border-2 border-gray-700">
+                      <p className="text-gray-400 text-lg">No hay tareas finalizadas</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {tasks
+                        .filter(task => task.status === 'INACTIVE')
+                        .map((task) => (
+                          <MissionCard 
+                            key={task.id}
+                            type={task.category || task.type}
+                            title={task.title}
+                            xp={task.experienceReward}
+                            description={task.description || 'Sin descripción'}
+                            status={task.status}
+                            isRecurrent={task.type === 'RECURRENT'}
+                            onReopen={() => handleReopenRecurrentTask(task.id)}
+                            onDelete={() => handleDeleteTask(task.id)}
+                            onDetails={() => handleDetailsTask(task)}
                           />
                         ))
                       }
