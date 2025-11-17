@@ -107,7 +107,7 @@ export function ProjectCard({
     }
   };
   
-  const completedTasks = tasks.filter(task => task.status === 'DONE').length;
+  const completedTasks = tasks.filter(task => task.status === 'DONE' || task.status === 'INACTIVE').length;
   const totalTasks = tasks.length;
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
+import { MissionsChart } from "@/components/missions-chart";
 
 export default function PerfilPage() {
   const { user } = useUser();
@@ -97,16 +98,9 @@ export default function PerfilPage() {
             </div>
           </div>
 
-          {/* CUADRANTE SUPERIOR DERECHO - Gráfica de Barras (3/4) */}
+          {/* CUADRANTE SUPERIOR DERECHO - Gráfica de Misiones Completadas (3/4) */}
           <div className="flex flex-col lg:col-span-3">
-            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-3">
-              Gráfica de barras
-            </h2>
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-950 border-2 border-gray-700 rounded-sm overflow-hidden flex-1">
-              <CardContent className="p-0 h-full">
-                {/* Caja vacía sin contenido */}
-              </CardContent>
-            </Card>
+            <MissionsChart />
           </div>
         </div>
 
