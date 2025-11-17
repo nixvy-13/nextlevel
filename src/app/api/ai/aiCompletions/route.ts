@@ -9,7 +9,7 @@ const SubTaskSchema = z.object({
   title: z.string().describe('Título de la subtarea'),
   description: z.string().describe('Descripción detallada de la subtarea'),
   type: z.enum(['ONCE', 'RECURRENT']).describe('Tipo de tarea: ONCE (una sola vez) o RECURRENT (recurrente)'),
-  recurrency: z.number().optional().describe('Si es recurrente, cada cuántos días se repite'),
+  recurrency: z.number().min(0).describe('Cada cuántos días se repite. Usar 0 si el tipo es ONCE'),
   difficulty: z.number().int().min(1).max(5).describe('Nivel de dificultad de 1 a 5'),
   experienceReward: z.number().int().min(1).max(100).describe('Recompensa de experiencia de 1 a 100'),
 });
