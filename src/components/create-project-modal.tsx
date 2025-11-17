@@ -60,6 +60,19 @@ interface CreateProjectModalProps {
   onProjectCreated?: () => void
 }
 
+interface SuggestedSubTask {
+  title: string
+  description: string
+  type: 'ONCE' | 'RECURRENT'
+  recurrency?: number
+  difficulty: number
+  experienceReward: number
+}
+
+interface SuggestedSubTasksResponse {
+  subtasks: SuggestedSubTask[]
+}
+
 export function CreateProjectModal({
   open,
   onOpenChange,
@@ -67,6 +80,7 @@ export function CreateProjectModal({
 }: CreateProjectModalProps) {
   const { user } = useUser()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = React.useState(false)
   const [expandedSubTasks, setExpandedSubTasks] = React.useState<number[]>([])
 
   const form = useForm<CreateProjectFormData>({
@@ -155,6 +169,76 @@ export function CreateProjectModal({
     )
   }
 
+  const handleGetSuggestions = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const description = form.getValues("description")
+
+    if (!description || description.trim() === "") {
+      alert("Por favor, ingresa una descripción para el proyecto")
+      return
+    }
+
+    try {
+      setIsLoadingSuggestions(true)
+
+      const response = await fetch("/api/ai/aiCompletions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectDescription: description,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string }
+        throw new Error(errorData.error || "Error al generar sugerencias")
+      }
+
+      const data = (await response.json()) as SuggestedSubTasksResponse
+
+      // Limpiar subtareas actuales y añadir las sugeridas
+      // Primero, remover todas las subtareas existentes
+      const currentFields = fields.length
+      for (let i = 0; i < currentFields; i++) {
+        remove(0)
+      }
+
+      // Añadir las subtareas sugeridas
+      if (data.subtasks && Array.isArray(data.subtasks)) {
+        for (const subtask of data.subtasks) {
+          append({
+            title: subtask.title,
+            description: subtask.description,
+            difficulty: subtask.difficulty,
+            experienceReward: subtask.experienceReward,
+            type: subtask.type,
+            recurrency: subtask.recurrency,
+          })
+        }
+
+        // Expandir todas las subtareas para que el usuario las vea
+        setExpandedSubTasks(
+          Array.from({ length: data.subtasks.length }, (_, i) => i)
+        )
+      }
+
+      console.log("Sugerencias cargadas exitosamente")
+    } catch (error) {
+      console.error("Error al obtener sugerencias:", error)
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Error al generar sugerencias. Intenta nuevamente."
+      )
+    } finally {
+      setIsLoadingSuggestions(false)
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
@@ -165,7 +249,7 @@ export function CreateProjectModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
           <FieldGroup>
             {/* Nombre del proyecto */}
             <Field>
@@ -217,25 +301,37 @@ export function CreateProjectModal({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">Subtareas</h3>
-              <Button
-                type="button"
-                onClick={() =>
-                  append({
-                    title: "",
-                    description: "",
-                    difficulty: 1,
-                    experienceReward: 10,
-                    type: "ONCE",
-                    recurrency: undefined,
-                  })
-                }
-                variant="outline"
-                size="sm"
-                className="bg-purple-600/20 border-purple-500 text-purple-400 hover:bg-purple-600/30"
-              >
-                <PlusIcon className="w-4 h-4 mr-2" />
-                Añadir Subtarea
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  onClick={handleGetSuggestions}
+                  disabled={isLoadingSuggestions || !form.watch("description")}
+                  variant="outline"
+                  size="sm"
+                  className="bg-blue-600/20 border-blue-500 text-blue-400 hover:bg-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoadingSuggestions ? "Generando..." : "✨ Obtener Sugerencias"}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() =>
+                    append({
+                      title: "",
+                      description: "",
+                      difficulty: 1,
+                      experienceReward: 10,
+                      type: "ONCE",
+                      recurrency: undefined,
+                    })
+                  }
+                  variant="outline"
+                  size="sm"
+                  className="bg-purple-600/20 border-purple-500 text-purple-400 hover:bg-purple-600/30"
+                >
+                  <PlusIcon className="w-4 h-4 mr-2" />
+                  Añadir Subtarea
+                </Button>
+              </div>
             </div>
 
             {fields.length === 0 ? (
