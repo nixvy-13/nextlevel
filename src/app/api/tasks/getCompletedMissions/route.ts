@@ -11,31 +11,73 @@ export async function GET() {
 
     const db = await getDbAsync()
 
-    // Obtener todas las tareas completadas del usuario con sus fechas
+    // Obtener todas las tareas completadas del usuario con sus fechas y detalles
     const completions = await db.taskCompletion.findMany({
       where: {
         userId: userId,
       },
       select: {
+        id: true,
         completedAt: true,
+        task: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            category: true,
+            experienceReward: true,
+          },
+        },
       },
       orderBy: {
         completedAt: "asc",
       },
     })
 
-    // Agrupar por fecha
-    const groupedByDate: { [key: string]: number } = {}
+    // Agrupar por fecha con detalles de las tareas
+    const groupedByDate: {
+      [key: string]: Array<{
+        id: number
+        title: string
+        description: string | null
+        category: string | null
+        experienceReward: number
+        completedAt: Date
+      }>
+    } = {}
 
-    completions.forEach((completion: { completedAt: Date }) => {
-      const date = completion.completedAt.toISOString().split("T")[0]
-      groupedByDate[date] = (groupedByDate[date] || 0) + 1
-    })
+    completions.forEach(
+      (completion: {
+        id: number
+        completedAt: Date
+        task: {
+          id: number
+          title: string
+          description: string | null
+          category: string | null
+          experienceReward: number
+        }
+      }) => {
+        const date = completion.completedAt.toISOString().split("T")[0]
+        if (!groupedByDate[date]) {
+          groupedByDate[date] = []
+        }
+        groupedByDate[date].push({
+          id: completion.id,
+          title: completion.task.title,
+          description: completion.task.description,
+          category: completion.task.category,
+          experienceReward: completion.task.experienceReward,
+          completedAt: completion.completedAt,
+        })
+      }
+    )
 
     // Convertir a formato de array
-    const result = Object.entries(groupedByDate).map(([date, count]) => ({
+    const result = Object.entries(groupedByDate).map(([date, tasks]) => ({
       date,
-      count,
+      count: tasks.length,
+      tasks,
     }))
 
     return Response.json(result)
