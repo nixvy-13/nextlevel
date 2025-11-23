@@ -45,7 +45,7 @@ export function MissionDetailsModal({
 }: MissionDetailsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-lg p-0 gap-0 shadow-2xl shadow-purple-500/50" onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-lg w-[calc(100%-2rem)] sm:w-auto p-0 gap-0 shadow-2xl shadow-purple-500/50" onInteractOutside={(e) => e.preventDefault()}>
         <VisuallyHidden.Root>
           <DialogTitle>Detalles de la Misión</DialogTitle>
         </VisuallyHidden.Root>

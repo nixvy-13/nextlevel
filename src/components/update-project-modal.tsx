@@ -74,7 +74,7 @@ export function UpdateProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md p-0 gap-0 shadow-2xl shadow-purple-500/50">
+      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md w-[calc(100%-2rem)] sm:w-auto p-0 gap-0 shadow-2xl shadow-purple-500/50">
         <VisuallyHidden.Root>
           <DialogTitle>Actualizar Proyecto</DialogTitle>
         </VisuallyHidden.Root>

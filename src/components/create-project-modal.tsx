@@ -241,7 +241,7 @@ export function CreateProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto w-[calc(100%-2rem)] sm:w-auto">
         <DialogHeader>
           <DialogTitle>Crear Nuevo Proyecto</DialogTitle>
           <DialogDescription>

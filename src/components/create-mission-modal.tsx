@@ -108,7 +108,7 @@ export function CreateMissionModal({ open, onOpenChange, onMissionCreated }: Cre
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md p-0 gap-0 shadow-2xl shadow-purple-500/50">
+      <DialogContent className="bg-gray-950 border-2 border-purple-500 rounded-sm max-w-md w-[calc(100%-2rem)] sm:w-auto p-0 gap-0 shadow-2xl shadow-purple-500/50">
         {/* Header con botón cerrar */}
         <DialogHeader className="relative p-6 pb-4 border-b border-purple-500/30">
           <DialogTitle className="text-purple-300 font-bold text-lg">Crear Nueva Misión</DialogTitle>
