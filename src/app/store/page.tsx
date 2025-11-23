@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MissionCard } from "@/components/mission-card";
+import { MissionDetailsModal } from "@/components/mission-details-modal";
 
 interface Task {
   id: number;
@@ -17,6 +18,8 @@ export default function StorePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Categorías de misiones con colores
   const categories = [
@@ -52,6 +55,45 @@ export default function StorePage() {
   const filteredTasks = selectedCategory
     ? tasks.filter((task) => task.category === selectedCategory)
     : tasks;
+
+  // Manejar apertura del modal de detalles
+  const handleShowDetails = (task: Task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  // Manejar cierre del modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTask(null);
+  };
+
+  // Manejar añadir tarea
+  const handleAddTask = async () => {
+    if (!selectedTask) return;
+    try {
+      const response = await fetch(`/api/tasks/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          taskId: selectedTask.id,
+        }),
+      });
+      if (response.ok) {
+        handleCloseModal();
+        // Aquí puedes mostrar un mensaje de éxito o actualizar el estado
+      }
+    } catch (error) {
+      console.error('Error al añadir tarea:', error);
+    }
+  };
+
+  // Manejar confirmación del modal
+  const handleConfirmAdd = () => {
+    handleAddTask();
+  };
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8">
@@ -100,11 +142,27 @@ export default function StorePage() {
                 xp={task.experienceReward}
                 description={task.description}
                 variant="store"
+                onDetails={() => handleShowDetails(task)}
+                onAdd={() => handleAddTask()}
               />
             ))
           )}
         </div>
       </div>
+
+      {/* Modal de detalles de tarea */}
+      <MissionDetailsModal
+        open={isModalOpen}
+        onOpenChange={handleCloseModal}
+        missionName={selectedTask?.title}
+        missionType={selectedTask?.category}
+        description={selectedTask?.description}
+        xp={selectedTask?.experienceReward}
+        showConfirmation={true}
+        confirmationText="¿Añadir esta tarea a tu lista?"
+        onConfirm={handleConfirmAdd}
+        onCancel={handleCloseModal}
+      />
     </div>
   );
 }

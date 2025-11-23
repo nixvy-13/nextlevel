@@ -71,37 +71,45 @@ export function MissionCard({
     });
   };
   
+  // Truncar descripción en móvil (máximo 100 caracteres)
+  const truncateDescription = (text: string, maxLength: number = 100) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
+  };
+
   return (
     <Card className={`bg-gradient-to-br from-gray-900 to-gray-950 border-2 ${colors.border} shadow-xl ${colors.shadow} rounded-sm overflow-hidden hover:${colors.border.replace('border-', 'border-')} transition-all`}>
-      <CardHeader className={`pb-3 border-b ${colors.border.replace('border-', 'border-')}/30`}>
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
-            <CardTitle className={`${colors.text} text-lg font-bold ${isStore && 'mb-2'}`}>
+      <CardHeader className={`pb-3 md:pb-4 px-3 md:px-4 border-b ${colors.border.replace('border-', 'border-')}/30`}>
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-3 md:gap-0">
+          <div className="flex-1 min-w-0">
+            <CardTitle className={`${colors.text} text-base md:text-lg font-bold ${isStore && 'mb-2'} break-words`}>
               {type} - {title} - {xp} Xp
             </CardTitle>
-            <CardDescription className={`${isStore ? 'text-white/80' : 'text-gray-400'} mt-2`}>
-              {description}
+            <CardDescription className={`${isStore ? 'text-white/80' : 'text-gray-400'} mt-2 text-sm md:text-base line-clamp-2 md:line-clamp-none`}>
+              {isStore ? truncateDescription(description, 100) : description}
             </CardDescription>
             {completedAt && (
-              <div className={`${colors.text} text-sm mt-2 font-semibold`}>
+              <div className={`${colors.text} text-xs md:text-sm mt-2 font-semibold`}>
                 ✓ Completado: {formatCompletedDate(completedAt)}
               </div>
             )}
           </div>
           
           {isStore && showActions && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
               <Button 
                 onClick={onAdd}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white border-2 border-yellow-500 hover:border-yellow-400 rounded-sm px-6 py-2 font-bold shadow-lg shadow-yellow-500/50 transition-all"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white border-2 border-yellow-500 hover:border-yellow-400 rounded-sm px-4 md:px-6 py-1.5 md:py-2 font-bold text-sm md:text-base shadow-lg shadow-yellow-500/50 transition-all whitespace-nowrap"
               >
                 Añadir
               </Button>
               <button 
                 onClick={onDetails}
-                className={`${colors.text} hover:text-white transition-colors`}
+                className={`${colors.text} hover:text-white transition-colors flex-shrink-0`}
               >
-                <Eye className="w-6 h-6" />
+                <Eye className="w-5 h-5 md:w-6 md:h-6" />
               </button>
             </div>
           )}
@@ -109,9 +117,9 @@ export function MissionCard({
           {!isStore && showActions && (
             <button 
               onClick={onDetails}
-              className={`${colors.text} hover:text-white transition-colors`}
+              className={`${colors.text} hover:text-white transition-colors flex-shrink-0`}
             >
-              <Eye className="w-6 h-6" />
+              <Eye className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           )}
         </div>

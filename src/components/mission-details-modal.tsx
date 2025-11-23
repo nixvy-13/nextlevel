@@ -148,7 +148,7 @@ export function MissionDetailsModal({
                   onClick={onConfirm}
                   className="bg-purple-600 hover:bg-purple-700 text-white border-2 border-purple-500 hover:border-purple-400 rounded-sm px-6 py-2 font-semibold text-base shadow-lg shadow-purple-500/50 transition-all"
                 >
-                  Publicar misión
+                  Añadir misión
                 </Button>
                 <Button
                   onClick={onCancel}
