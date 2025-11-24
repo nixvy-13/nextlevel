@@ -48,7 +48,7 @@ export async function PUT(request: Request) {
     }
 
     // Preparar datos para actualizar (solo campos definidos)
-    const updateData: Record<string, any> = {};
+    const updateData: Partial<UpdateProjectRequest> = {};
 
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;

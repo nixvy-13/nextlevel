@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { calculateLevelFromXp } from '@/lib/xp';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { userId } = await auth();
 

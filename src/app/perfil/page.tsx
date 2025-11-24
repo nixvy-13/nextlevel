@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 import { MissionsChart } from "@/components/missions-chart";
@@ -8,7 +9,6 @@ import { MissionsChart } from "@/components/missions-chart";
 export default function PerfilPage() {
   const { user } = useUser();
   const [level, setLevel] = useState(1);
-  const [experience, setExperience] = useState(0);
   const [currentLevelXp, setCurrentLevelXp] = useState(0);
   const [nextLevelXp, setNextLevelXp] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,6 @@ export default function PerfilPage() {
             nextLevelXp: number;
             progressPercentage: number;
           };
-          setExperience(xpData.experience);
           setCurrentLevelXp(xpData.currentLevelXp);
           setNextLevelXp(xpData.nextLevelXp);
         }
@@ -81,10 +80,11 @@ export default function PerfilPage() {
             </h2>
             <div className="relative w-full aspect-square bg-gray-900 border-2 border-gray-700 rounded-sm overflow-hidden group hover:border-purple-500 transition-all">
               {user?.imageUrl ? (
-                <img 
+                <Image 
                   src={user.imageUrl} 
                   alt={`Foto de perfil de ${user.username || 'Usuario'}`}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/80">

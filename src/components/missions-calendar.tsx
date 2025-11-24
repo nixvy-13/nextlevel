@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Calendar, CalendarDayButton } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar"
 import { es } from "date-fns/locale"
 import { format } from "date-fns"
 import {
@@ -30,10 +30,6 @@ interface DayCompletions {
   date: string
   count: number
   tasks: CompletedTask[]
-}
-
-interface MissionsCalendarProps {
-  missions?: any[]
 }
 
 const categoryColors: { [key: string]: string } = {
@@ -92,7 +88,7 @@ function CustomDayButton({
   )
 }
 
-export function MissionsCalendar({ missions = [] }: MissionsCalendarProps) {
+export function MissionsCalendar(): React.ReactNode {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
   const [completedMissions, setCompletedMissions] = React.useState<
     DayCompletions[]

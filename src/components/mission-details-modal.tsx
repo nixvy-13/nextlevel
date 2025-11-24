@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Eye } from "lucide-react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 interface MissionDetailsModalProps {
@@ -35,7 +33,6 @@ export function MissionDetailsModal({
   description = "Descripción de la misión",
   xp = 50,
   difficulty = 1,
-  category = "Sin categoría",
   missionType2 = "ONCE",
   recurrence = 0,
   showConfirmation = false,

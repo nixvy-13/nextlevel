@@ -1,8 +1,8 @@
 import { getDbAsync } from '@/lib/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const { userId } = await auth();
     
@@ -20,7 +20,7 @@ export async function GET(req: Request) {
       },
     });
     return NextResponse.json(tasks);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to get default tasks' }, { status: 500 });
   }
 }

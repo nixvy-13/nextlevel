@@ -18,6 +18,27 @@ type TaskCategory = 'SALUD' | 'ENTRETENIMIENTO' | 'SOCIALES' | 'NATURALEZA' | 'V
 type TaskStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 type ProjectStatus = 'ACTIVE' | 'DONE' | 'INACTIVE';
 
+interface UpdateTaskData {
+  title?: string;
+  description?: string;
+  type?: TaskType;
+  status?: TaskStatus;
+  category?: TaskCategory;
+  difficulty?: number;
+  experienceReward?: number;
+  recurrency?: number;
+}
+
+interface UpdateProjectData {
+  title?: string;
+  description?: string;
+  experienceReward?: number;
+}
+
+interface ErrorResponse {
+  message: string;
+}
+
 interface Project {
   id: number;
   userId: string;
@@ -145,7 +166,7 @@ export default function Home() {
   };
 
   // Función para actualizar una tarea
-  const handleUpdateTask = async (taskId: number, data: any) => {
+  const handleUpdateTask = async (taskId: number, data: UpdateTaskData) => {
     try {
       const response = await fetch('/api/tasks/modify', {
         method: 'PUT',
@@ -329,7 +350,7 @@ export default function Home() {
   };
 
   // Función para actualizar un proyecto
-  const handleUpdateProject = async (projectId: number, data: any) => {
+  const handleUpdateProject = async (projectId: number, data: UpdateProjectData) => {
     try {
       const response = await fetch('/api/projects/modify', {
         method: 'PUT',
@@ -365,14 +386,14 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json() as any;
+        const errorData = await response.json() as ErrorResponse;
         throw new Error(errorData.message || 'Error al completar el proyecto');
       }
 
       const result = await response.json() as {
         message: string;
         project: Project;
-        user: any;
+        user: { clerkId: string; level: number; totalXp: number };
         xpGained: number;
         leveledUp: boolean;
         newLevel: number;
@@ -644,7 +665,7 @@ export default function Home() {
           initialTitle={selectedTask?.title}
           initialDescription={selectedTask?.description || ""}
           initialXp={selectedTask?.experienceReward}
-          initialType={selectedTask?.type as any}
+          initialType={selectedTask?.type as TaskType}
           initialRecurrency={selectedTask?.recurrencePattern ? parseInt(selectedTask.recurrencePattern) : 0}
           onUpdate={handleUpdateTask}
         />

@@ -71,7 +71,8 @@ const CollapsibleTrigger = React.forwardRef<
 })
 CollapsibleTrigger.displayName = "CollapsibleTrigger"
 
-interface CollapsibleContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+// No necesitamos agregar propiedades, React.HTMLAttributes ya provee todas las necesarias
+type CollapsibleContentProps = React.HTMLAttributes<HTMLDivElement>
 
 const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentProps>(
   ({ ...props }, ref) => {

@@ -84,9 +84,10 @@ export async function POST(req: Request) {
         });
         
         console.log(`✅ Usuario eliminado de la BD: ${id}`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Si el usuario ya no existe, no es un error crítico
-        if (error?.code === 'P2025') { // Prisma error: Record not found
+        const prismaError = error as { code?: string };
+        if (prismaError?.code === 'P2025') { // Prisma error: Record not found
           console.warn(`⚠️ El usuario no existe en la BD: ${id}`);
         } else {
           throw error;

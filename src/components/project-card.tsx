@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
@@ -69,14 +69,10 @@ export function ProjectCard({
   status,
   experienceReward,
   tasks: initialTasks,
-  createdAt,
   onEdit,
   onDelete,
   onDetails,
   onCompleteTask,
-  onEditTask,
-  onDeleteTask,
-  onDetailsTask,
   onCompleteProject,
   showActions = true,
 }: ProjectCardProps) {
@@ -84,14 +80,7 @@ export function ProjectCard({
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [loadingSubtasks, setLoadingSubtasks] = useState(false);
   
-  // Cargar las subtareas cuando se abre/cierra la sección
-  useEffect(() => {
-    if (isOpen && tasks.length === 0) {
-      fetchSubTasks();
-    }
-  }, [isOpen]);
-
-  const fetchSubTasks = async () => {
+  const fetchSubTasks = useCallback(async () => {
     try {
       setLoadingSubtasks(true);
       const response = await fetch(`/api/projects/getSubTasks?projectId=${id}`);
@@ -105,7 +94,14 @@ export function ProjectCard({
     } finally {
       setLoadingSubtasks(false);
     }
-  };
+  }, [id]);
+  
+  // Cargar las subtareas cuando se abre/cierra la sección
+  useEffect(() => {
+    if (isOpen && tasks.length === 0) {
+      fetchSubTasks();
+    }
+  }, [isOpen, tasks.length, fetchSubTasks]);
   
   const completedTasks = tasks.filter(task => task.status === 'DONE' || task.status === 'INACTIVE').length;
   const totalTasks = tasks.length;

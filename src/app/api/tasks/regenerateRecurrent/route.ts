@@ -1,7 +1,7 @@
 import { getDbAsync } from "@/lib/db";
 import { TaskStatus, TaskType } from "@prisma/client";
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
     const prisma = await getDbAsync();
 
