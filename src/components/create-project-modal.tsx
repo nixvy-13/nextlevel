@@ -241,15 +241,15 @@ export function CreateProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto w-[calc(100%-2rem)] sm:w-auto">
-        <DialogHeader>
-          <DialogTitle>Crear Nuevo Proyecto</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="w-[calc(100%-1rem)] sm:w-[calc(100%-2rem)] md:w-[600px] lg:w-[700px] xl:w-[800px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+        <DialogHeader className="mb-4 sm:mb-6">
+          <DialogTitle className="text-base sm:text-lg">Crear Nuevo Proyecto</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Crea un proyecto y añade subtareas para organizarte mejor.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" noValidate>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-6" noValidate>
           <FieldGroup>
             {/* Nombre del proyecto */}
             <Field>
@@ -298,17 +298,17 @@ export function CreateProjectModal({
           </FieldGroup>
 
           {/* Subtareas */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="space-y-2 sm:space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <h3 className="text-lg font-semibold text-white">Subtareas</h3>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <Button
                   type="button"
                   onClick={handleGetSuggestions}
                   disabled={isLoadingSuggestions || !form.watch("description")}
                   variant="outline"
                   size="sm"
-                  className="bg-blue-600/20 border-blue-500 text-blue-400 hover:bg-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-blue-600/20 border-blue-500 text-blue-400 hover:bg-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm flex-1 sm:flex-none py-2.5 h-auto"
                 >
                   {isLoadingSuggestions ? "Generando..." : "✨ Obtener Sugerencias"}
                 </Button>
@@ -326,7 +326,7 @@ export function CreateProjectModal({
                   }
                   variant="outline"
                   size="sm"
-                  className="bg-purple-600/20 border-purple-500 text-purple-400 hover:bg-purple-600/30"
+                  className="bg-purple-600/20 border-purple-500 text-purple-400 hover:bg-purple-600/30 text-xs sm:text-sm flex-1 sm:flex-none py-2.5 h-auto"
                 >
                   <PlusIcon className="w-4 h-4 mr-2" />
                   Añadir Subtarea
@@ -335,11 +335,11 @@ export function CreateProjectModal({
             </div>
 
             {fields.length === 0 ? (
-              <div className="text-center py-8 bg-gray-900/50 rounded-md border-2 border-gray-700">
-                <p className="text-gray-400">No hay subtareas aún</p>
+              <div className="text-center py-4 sm:py-8 bg-gray-900/50 rounded-md border-2 border-gray-700">
+                <p className="text-gray-400 text-sm sm:text-base">No hay subtareas aún</p>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {fields.map((field, index) => (
                   <Collapsible
                     key={field.id}
@@ -381,7 +381,7 @@ export function CreateProjectModal({
                         </div>
                       </CollapsibleTrigger>
 
-                      <CollapsibleContent className="px-4 pb-4 pt-2 space-y-4 bg-gray-950/30 border-t border-gray-700">
+                      <CollapsibleContent className="px-4 pb-3 pt-2 space-y-2 sm:space-y-4 bg-gray-950/30 border-t border-gray-700">
                         <Field>
                           <FieldLabel htmlFor={`subtask-title-${index}`}>
                             Título
@@ -456,7 +456,7 @@ export function CreateProjectModal({
                           </Field>
                         )}
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-2 sm:gap-4">
                           <Field>
                             <FieldLabel htmlFor={`subtask-difficulty-${index}`}>
                               Dificultad
