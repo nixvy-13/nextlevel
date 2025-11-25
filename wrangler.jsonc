@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "nextlevel",
 	"main": ".open-next/worker.js",
-	"compatibility_date": "2025-03-01",
+	"compatibility_date": "2025-11-25",
 	"compatibility_flags": [
 		"nodejs_compat",
 		"nodejs_compat_populate_process_env",
