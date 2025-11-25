@@ -22,7 +22,7 @@
 		{
 			"binding": "DB",
 			"database_name": "nextlevel-db",
-			"database_id": "568a86be-c7ee-4834-b62f-502eb757e319",
+			"database_id": "f3b8198b-106b-48fa-9760-32d29b65d744",
 			"migrations_dir": "./prisma/migrations"
 		}
 	]
