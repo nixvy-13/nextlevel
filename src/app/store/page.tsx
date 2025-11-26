@@ -72,7 +72,7 @@ export default function StorePage() {
   const handleAddTask = async () => {
     if (!selectedTask) return;
     try {
-      const response = await fetch(`/api/tasks/add`, {
+      const response = await fetch(`/api/tasks/addMision`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,8 +1,17 @@
 import { getDbAsync } from "@/lib/db";
 import { TaskStatus, TaskType } from "@prisma/client";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    // Verificar el secreto del Cron
+    const authHeader = request.headers.get("x-cron-secret");
+    if (authHeader !== process.env.CRON_SECRET) {
+      return Response.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const prisma = await getDbAsync();
 
     // Obtener todas las misiones recurrentes que están en estado DONE
