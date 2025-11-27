@@ -34,6 +34,6 @@ export async function GET() {
     });
     return NextResponse.json(tasks);
   } catch {
-    return NextResponse.json({ error: 'Failed to get default tasks' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

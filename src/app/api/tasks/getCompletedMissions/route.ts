@@ -6,7 +6,7 @@ export async function GET() {
     const { userId } = await auth()
 
     if (!userId) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 })
+      return Response.json({ error: "Authentication required" }, { status: 401 })
     }
 
     const db = await getDbAsync()
@@ -84,7 +84,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching completed missions:", error)
     return Response.json(
-      { error: "Failed to fetch completed missions" },
+      { error: "Internal server error" },
       { status: 500 }
     )
   }

@@ -15,7 +15,7 @@ export async function PUT(request: Request) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: "No autorizado" },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -25,7 +25,7 @@ export async function PUT(request: Request) {
 
     if (!projectId) {
       return NextResponse.json(
-        { error: "ID del proyecto es requerido" },
+        { error: 'ID del proyecto es requerido' },
         { status: 400 }
       );
     }
@@ -42,7 +42,7 @@ export async function PUT(request: Request) {
 
     if (!project) {
       return NextResponse.json(
-        { error: "Proyecto no encontrado" },
+        { error: 'Proyecto no encontrado' },
         { status: 404 }
       );
     }
@@ -67,7 +67,7 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error("Error al actualizar el proyecto:", error);
     return NextResponse.json(
-      { error: "Error al actualizar el proyecto" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

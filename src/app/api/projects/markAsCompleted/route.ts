@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
 
     if (!projectId) {
       return NextResponse.json(
-        { error: 'Project ID is required' },
+        { error: 'ID del proyecto es requerido' },
         { status: 400 }
       );
     }
@@ -42,7 +42,7 @@ export async function PUT(req: Request) {
 
     if (!project) {
       return NextResponse.json(
-        { error: 'Project not found or unauthorized' },
+        { error: 'Proyecto no encontrado o no autorizado' },
         { status: 404 }
       );
     }
@@ -50,7 +50,7 @@ export async function PUT(req: Request) {
     // Verificar que el proyecto no esté ya completado
     if (project.status === 'DONE') {
       return NextResponse.json(
-        { error: 'Project is already completed' },
+        { error: 'El proyecto ya está completado' },
         { status: 400 }
       );
     }
@@ -80,8 +80,8 @@ export async function PUT(req: Request) {
     if (recurrentTasksNotInactive.length > 0) {
       return NextResponse.json(
         { 
-          error: 'Cannot complete project',
-          message: 'All RECURRENT type missions must be in INACTIVE status',
+          error: 'No se puede completar el proyecto',
+          message: 'Todas las tareas recurrentes deben estar en estado INACTIVO',
           incompleteTasks: recurrentTasksNotInactive.map(task => ({
             id: task.id,
             title: task.title,
@@ -111,7 +111,7 @@ export async function PUT(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'Usuario no encontrado' },
         { status: 404 }
       );
     }
@@ -131,7 +131,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(
       {
-        message: 'Project completed successfully',
+        message: 'Proyecto completado correctamente',
         project: updatedProject,
         user: updatedUser,
         xpGained: xpGain,
@@ -143,7 +143,7 @@ export async function PUT(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error completing project:', error);
+    console.error('Error al completar el proyecto:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

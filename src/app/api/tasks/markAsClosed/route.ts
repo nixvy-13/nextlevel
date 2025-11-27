@@ -8,7 +8,7 @@ export async function PUT(request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: "Usuario no autenticado" },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -60,7 +60,7 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Error al cerrar la tarea recurrente:", error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

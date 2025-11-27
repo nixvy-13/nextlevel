@@ -12,7 +12,7 @@ export async function DELETE(req: Request) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'No autorizado' },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -21,7 +21,7 @@ export async function DELETE(req: Request) {
 
     if (!projectId) {
       return NextResponse.json(
-        { error: 'projectId es requerido' },
+        { error: 'ID del proyecto es requerido' },
         { status: 400 }
       );
     }
@@ -61,7 +61,7 @@ export async function DELETE(req: Request) {
   } catch (error) {
     console.error('Error al eliminar proyecto:', error);
     return NextResponse.json(
-      { error: 'Error al eliminar proyecto' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

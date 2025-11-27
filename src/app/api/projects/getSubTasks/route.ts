@@ -8,7 +8,7 @@ export async function GET(req: Request) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'No autorizado' },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
     if (!projectId) {
       return NextResponse.json(
-        { error: 'Project ID requerido' },
+        { error: 'ID del proyecto es requerido' },
         { status: 400 }
       );
     }
@@ -67,7 +67,7 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error('Error al obtener subtareas del proyecto:', error);
     return NextResponse.json(
-      { error: 'Error al obtener subtareas del proyecto' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

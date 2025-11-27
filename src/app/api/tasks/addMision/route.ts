@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     return NextResponse.json(newTask);
   } catch (error) {
     console.error("[TASK_ADD]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse("Internal server error", { status: 500 });
   }
 }
 

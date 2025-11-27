@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('Error creando tarea:', error);
-    return new Response(JSON.stringify({ error: 'Error interno' }), {
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

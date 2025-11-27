@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Error creando proyecto:', error);
     return NextResponse.json(
-      { error: 'Error interno' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

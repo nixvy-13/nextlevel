@@ -22,7 +22,7 @@ export async function GET() {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'Usuario no encontrado' },
         { status: 404 }
       );
     }
@@ -32,7 +32,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error getting user level:', error);
+    console.error('Error al obtener el nivel del usuario:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

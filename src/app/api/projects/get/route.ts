@@ -6,7 +6,7 @@ export async function GET() {
     const { userId } = await auth();
 
     if (!userId) {
-      return Response.json({ error: 'No autorizado' }, { status: 401 });
+      return Response.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     const db = await getDbAsync();
@@ -35,7 +35,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error al obtener proyectos:', error);
     return Response.json(
-      { error: 'Error al obtener proyectos' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

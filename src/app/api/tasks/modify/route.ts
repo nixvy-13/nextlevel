@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
 
     if (!taskData.taskId) {
       return NextResponse.json(
-        { error: 'Task ID is required' },
+        { error: 'ID de tarea es requerido' },
         { status: 400 }
       );
     }
@@ -50,7 +50,7 @@ export async function PUT(req: Request) {
 
     if (!task) {
       return NextResponse.json(
-        { error: 'Task not found or unauthorized' },
+        { error: 'Tarea no encontrada o no autorizada' },
         { status: 404 }
       );
     }
@@ -74,7 +74,7 @@ export async function PUT(req: Request) {
     
     return NextResponse.json(updatedTask, { status: 200 });
   } catch (error) {
-    console.error('Error updating task:', error);
+    console.error('Error al actualizar la tarea:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

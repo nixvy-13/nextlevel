@@ -64,14 +64,14 @@ export async function POST(req: Request) {
       });
       
       if (existingUser) {
-        console.log(`⚠️ Usuario ya existe en BD: ${id}`);
+        console.log(`Usuario ya existe en BD: ${id}`);
       } else {
         await db.user.create({
           data: {
             clerkId: id
           },
         });
-        console.log(`✅ Usuario creado en BD: ${id}`);
+        console.log(`Usuario creado en BD: ${id}`);
       }
     }
 
@@ -83,12 +83,12 @@ export async function POST(req: Request) {
           where: { clerkId: id },
         });
         
-        console.log(`✅ Usuario eliminado de la BD: ${id}`);
+        console.log(`Usuario eliminado de la BD: ${id}`);
       } catch (error: unknown) {
         // Si el usuario ya no existe, no es un error crítico
         const prismaError = error as { code?: string };
         if (prismaError?.code === 'P2025') { // Prisma error: Record not found
-          console.warn(`⚠️ El usuario no existe en la BD: ${id}`);
+          console.warn(`El usuario no existe en la BD: ${id}`);
         } else {
           throw error;
         }
@@ -101,10 +101,10 @@ export async function POST(req: Request) {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error('❌ Error procesando webhook:', error);
+    console.error('Error procesando webhook:', error);
     // Devolvemos 500 para que Clerk reintente el webhook
     return new Response(JSON.stringify({ 
-      error: 'Error interno del servidor' 
+      error: 'Internal server error' 
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

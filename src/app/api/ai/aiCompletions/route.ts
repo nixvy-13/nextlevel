@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     
     if (!userId) {
       return NextResponse.json(
-        { error: 'Autenticación requerida' },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -91,7 +91,7 @@ Genera las subtareas en español.
     }
 
     return NextResponse.json(
-      { error: 'Error al generar sugerencias' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

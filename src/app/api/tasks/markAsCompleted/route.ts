@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
 
     if (!taskId) {
       return NextResponse.json(
-        { error: 'Task ID is required' },
+        { error: 'ID de tarea es requerido' },
         { status: 400 }
       );
     }
@@ -39,7 +39,7 @@ export async function PUT(req: Request) {
 
     if (!task) {
       return NextResponse.json(
-        { error: 'Task not found or unauthorized' },
+        { error: 'Tarea no encontrada o no autorizada' },
         { status: 404 }
       );
     }
@@ -47,7 +47,7 @@ export async function PUT(req: Request) {
     // Verificar que la tarea no esté ya completada
     if (task.status === 'DONE') {
       return NextResponse.json(
-        { error: 'Task is already completed' },
+        { error: 'La tarea ya está completada' },
         { status: 400 }
       );
     }
@@ -75,7 +75,7 @@ export async function PUT(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'Usuario no encontrado' },
         { status: 404 }
       );
     }
@@ -95,7 +95,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(
       {
-        message: 'Task completed successfully',
+        message: 'Tarea completada correctamente',
         task: {
           ...updatedTask,
           taskCompletions: [taskCompletion],
@@ -111,7 +111,7 @@ export async function PUT(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error completing task:', error);
+    console.error('Error al completar la tarea:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
