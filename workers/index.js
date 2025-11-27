@@ -1,6 +1,5 @@
 export default {
   async scheduled(event, env, ctx) {
-    // ⚠️ CAMBIAR ESTO: Pon aquí tu dominio real de producción (ej: https://nextlevel.vercel.app)
     const DOMAIN = "https://nextlevel.nixvy.ninja"; 
     const API_URL = `${DOMAIN}/api/tasks/regenerateRecurrent`;
 
@@ -11,7 +10,6 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Esta variable se configura con: npx wrangler secret put API_SECRET_KEY
           "x-cron-secret": env.API_SECRET_KEY,
         },
       });
@@ -22,4 +20,3 @@ export default {
     }
   },
 };
-

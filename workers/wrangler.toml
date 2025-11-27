@@ -1,8 +1,0 @@
-name = "nextlevel-cron"
-main = "index.js"
-compatibility_date = "2024-01-01"
-
-# Configuración del Cron Trigger
-[triggers]
-# Ejecutar cada día a las 00:00 UTC (12 de la noche)
-crons = ["0 0 * * *"]
