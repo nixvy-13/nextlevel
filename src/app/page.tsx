@@ -432,14 +432,14 @@ export default function Home() {
             </TabsTrigger>
             <TabsTrigger 
               value="calendario" 
-              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-gray-800 data-[state=active]:border-gray-600 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 transition-all font-semibold"
+              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:border-purple-400 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 data-[state=active]:hover:bg-purple-700 data-[state=active]:hover:border-purple-400 transition-all font-semibold"
             >
               Calendario
             </TabsTrigger>
             <TabsTrigger 
               value="kanban" 
-              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:border-purple-400 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 transition-all font-semibold"
-        >
+              className="bg-gray-900 border-2 border-gray-700 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:border-purple-400 data-[state=active]:text-white rounded-sm hover:bg-gray-800 hover:border-gray-600 data-[state=active]:hover:bg-purple-700 data-[state=active]:hover:border-purple-400 transition-all font-semibold"
+            >
               Kanban board
             </TabsTrigger>
           </TabsList>
