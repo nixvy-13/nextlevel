@@ -7,13 +7,13 @@ export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("authentication required", { status: 401 });
     }
 
     const { taskId } = (await req.json()) as { taskId: number };
 
     if (!taskId) {
-      return new NextResponse("Task ID is required", { status: 400 });
+      return new NextResponse("Se necesita un ID de tarea", { status: 400 });
     }
 
     const db = await getDbAsync();
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     });
 
     if (!sourceTask) {
-      return new NextResponse("Source task not found", { status: 404 });
+      return new NextResponse("Tarea no encontrada", { status: 404 });
     }
 
     // Crear la nueva tarea para el usuario actual
