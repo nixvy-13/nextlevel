@@ -1,10 +1,10 @@
 export default {
   async scheduled(event, env, ctx) {
     // ⚠️ CAMBIAR ESTO: Pon aquí tu dominio real de producción (ej: https://nextlevel.vercel.app)
-    const DOMAIN = "https://tu-dominio-real.com"; 
+    const DOMAIN = "https://nextlevel.nixvy.ninja"; 
     const API_URL = `${DOMAIN}/api/tasks/regenerateRecurrent`;
 
-    console.log("⏰ Cron disparado: Llamando a regenerar misiones...");
+    console.log("Cron activado: Llamando al endpoint...");
 
     try {
       const response = await fetch(API_URL, {
