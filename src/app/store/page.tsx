@@ -69,8 +69,10 @@ export default function StorePage() {
   };
 
   // Manejar añadir tarea
-  const handleAddTask = async () => {
-    if (!selectedTask) return;
+  const handleAddTask = async (task?: Task) => {
+    const targetTask = task || selectedTask;
+    
+    if (!targetTask) return;
     try {
       const response = await fetch(`/api/tasks/addMision`, {
         method: 'POST',
@@ -78,12 +80,12 @@ export default function StorePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          taskId: selectedTask.id,
+          taskId: targetTask.id,
         }),
       });
       if (response.ok) {
         handleCloseModal();
-        // Aquí puedes mostrar un mensaje de éxito o actualizar el estado
+        alert("Misión añadida con éxito!");
       }
     } catch (error) {
       console.error('Error al añadir tarea:', error);
@@ -143,7 +145,7 @@ export default function StorePage() {
                 description={task.description}
                 variant="store"
                 onDetails={() => handleShowDetails(task)}
-                onAdd={() => handleAddTask()}
+                onAdd={() => handleAddTask(task)}
               />
             ))
           )}
